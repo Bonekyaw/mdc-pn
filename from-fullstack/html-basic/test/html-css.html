@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML CSS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Global Styles */
+      /* font-family: Arial, Helvetica, sans-serif; */
+      /* font-family: "Times New Roman", Georgia, serif; */
+      /* font-family: "Courier New", monospace; */
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      /* static, relative , fixed, sticky, absolute*/
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      header img {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      nav {
+        background-color: #333;
+        overflow: hidden;
+        position: sticky;
+        top: 0;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        /* border: 2px solid red; */
+        display: flex;
+        justify-content: center ;
+      }
+
+      nav ul li {
+        /* border: 1px solid green; */
+        padding: 14px 20px;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+      }
+
+      nav ul li a:hover {
+        background-color: #575757;
+      }
+
+      main {
+        padding: 20px;
+        max-width: 1200px;
+        margin: auto;
+        background-color: white;
+        /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+      }
+
+      section {
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        color: #4caf50;
+        /* border: 2px solid gray; */
+        /* border-radius: 5px; */
+        /* text-transform: uppercase; */
+        /* text-shadow: 2px 2px 2px rgb(230, 225, 225), 0px 0px 25px rgb(76, 212, 167); */
+      }
+
+      h2 {
+        font-family: Georgia, serif;
+        font-style: italic;
+        font-weight: bold;
+        /* font-variant: small-caps; */
+      }
+
+      p {
+        font-family: "Playwrite DE Grund", cursive;
+        font-optical-sizing: auto;
+        font-weight: bold;
+        font-style: normal;
+        line-height: 1.6rem;
+        text-align: justify;
+        text-indent: 5em;
+        /* letter-spacing: 1px; */
+        /* word-spacing: 3px; */
+      }
+
+      p a {
+        color: green;
+        /* text-decoration: none; */
+        /* text-decoration-line: underline; */
+        /* text-decoration-color: rgb(92, 191, 234);
+        text-decoration-style: dashed;
+        text-decoration-thickness: 3px; */
+        text-decoration: underline rgb(92, 191, 234) dashed 3px;
+      }
+
+      #about div {
+        width: 200px;
+        height: 80px;
+        border: 2px solid green;
+        overflow: auto;
+      }
+
+      #about ul {
+        list-style-type: square;
+        /* margin: 0;
+        padding: 0; */
+        /* list-style-position: inside; */
+        /* list-style-image: url("../images/pet.png"); */
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header Section -->
+    <header>
+      <!-- Logo Image -->
+      <img src="../images/shop.png" alt="Logo" />
+      <h1>Welcome to Pet Shop</h1>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content Section -->
+    <main>
+      <section id="home">
+        <h2>Home</h2>
+        <p>
+          Welcome to the homepage of this simple website. If you want to talk to
+          us, go to <a href="#contact">contact</a>, you'll find basic
+          information about the site. Feel free to reach out via email or social
+          media if you have any questions or comments.
+        </p>
+      </section>
+
+      <section id="about">
+        <h2>About</h2>
+        <p>
+          This website is built using only HTML and CSS. It serves as an example
+          of a basic webpage structure with simple styling.
+        </p>
+        <div>
+          you'll find basic information about the site. Feel free to reach out
+          via email or social media if you have any questions or comments.
+        </div>
+        <ul>
+          <li>you'll find basic information about the site.</li>
+          <li>
+            Feel free to reach out via email or social media if you have any
+            questions or comments.
+          </li>
+          <li>We offer a range of services</li>
+          <li>Feel free to reach out via email</li>
+        </ul>
+      </section>
+
+      <section id="services">
+        <h2>Services</h2>
+        <p>
+          We offer a range of services to help you learn more about web
+          development. These include tutorials and examples.
+        </p>
+      </section>
+
+      <section id="contact">
+        <h2>Contact</h2>
+        <p>
+          Feel free to reach out via email or social media if you have any
+          questions or comments.
+        </p>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+      <p>&copy; 2024 Simple Website. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple HTML Website</title>
+    <style>
+      /* Global Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      header img {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      nav {
+        background-color: #333;
+        overflow: hidden;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      nav ul li {
+        padding: 14px 20px;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+      }
+
+      nav ul li a:hover {
+        background-color: #575757;
+      }
+
+      main {
+        padding: 20px;
+        max-width: 1200px;
+        margin: auto;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      section {
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        color: #4caf50;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+      }
+
+      /* Back to Top Button */
+      #backToTop {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none;
+      }
+
+      #backToTop:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header Section -->
+    <header>
+      <!-- Logo Image -->
+      <!-- https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg -->
+      <img src="../images/pet.png" alt="Logo" />
+      <h1 id="greeting">Welcome to Pet Shop</h1>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content Section -->
+    <main>
+      <section id="home">
+        <h2>Home</h2>
+        <p>
+          Welcome to the homepage <br> of this simple website. Here, you'll find
+          basic information about the site. This is a paragraph with some <strong>important</strong> content. It
+          also contains an <em>emphasized</em> word, and here's an inline quote:
+          <q>Coding is great!</q>
+          <blockquote>
+            This is a blockquote. It is used to indicate that the text is a quote.
+          </blockquote>
+        </p>
+        <hr>
+        <p>This is a span <span style="color:red;">red</span> word in the paragraph.</p>
+        <p>The <abbr title="World Health Organization">WHO</abbr> is responsible for international public health.</p>
+        <p><cite>The Great Gatsby</cite> is a novel by F. Scott Fitzgerald.</p>
+        <p>Here is a         list of <mark>programming</mark> languages:</p>
+        <pre>
+        1. Python
+          2. JavaScript
+            3. Java
+        </pre>
+        <p>
+          For example, in Python, you can print a message using the following
+          code:
+        </p>
+        <pre>
+<code>
+    print("Hello, world!")
+</code>
+</pre>
+      </section>
+<!-- html entities -->
+      <section id="about">
+        <h2>About</h2>
+        <p>
+          This website is built using &lt;HTML&gt;, CSS, and JavaScript. It serves as an
+          example of a basic webpage structure with interactivity.
+        </p>
+        <ul>
+          <li>Home</li>
+          <li>About</li>
+          <li>Services</li>
+          <li>Contact</li>
+        </ul>
+        <!-- Link - HyperLinks -->
+        <a href="https://google.com" target="_blank" title="google.com" style="display: block;" rel="noopener">Go to google</a>
+        <a href="html-only.html" target="_self">Go to HTML Only</a><br>
+        <button onclick="alert('You clicked it!')">Click</button><br>
+        <!-- media -->
+        <video width="400" height="300" controls autoplay muted>
+          <source src="../images/Unity.mp4" type="video/mp4">
+        </video>
+      </section>
+<!-- block vs inline -->
+      <section id="services">
+        <h2>Services</h2>
+        <p>
+          &#128512; We offer a range of services to help you learn more about web
+          development. These include tutorials and examples.
+        </p>
+                <!-- form -->
+                <form action="action.php" method="post">
+                  <fieldset>
+                    <legend>Personal Info</legend>
+                    <label for="username">User Name</label><br>
+                    <input type="text" id="username" name="username" value="" placeholder="Mr. Phone" autofocus required pattern="[0-9A-Za-z]"><br>
+                    <label for="password">Password [ 0 - 9 ]</label><br>
+                    <input type="password" id="password" name="password" value="" maxlength="8" pattern="[0-9]{8}" required><br>
+                    <label for="role">Role</label><br>
+                    <input type="text" id="role" name="role" value="Admin" disabled><br><br>
+                  </fieldset>
+                  <!-- radio -->
+                   <br>
+                    <input type="radio" id="html" name="language" value="HTML">
+                    <label for="html">HTML</label><br>
+                    <input type="radio" id="css" name="language" value="CSS">
+                    <label for="css">CSS</label><br>
+                    <input type="radio" id="js" name="language" value="JS">
+                    <label for="js">JS</label><br><br>
+                  <!-- checkbox -->
+                  <input type="checkbox" id="course1" name="course1" value="Programming">
+                  <label for="course1">Prgramming Course</label><br>
+                  <input type="checkbox" id="course2" name="course2" value="design">
+                  <label for="course2">UI/UX Course</label><br>
+                  <input type="checkbox" id="course3" name="course3" value="management">
+                  <label for="course3">Project Management Course</label><br><br>
+                  <label for="quantity">Quantity</label>
+                  <input type="number" id="quantity" name="quantity" value="" min="1" max="100"><br><br>
+                  <label for="color">Choose color</label>
+                  <input type="color" id="color" name="color" value="#128512"><br><br>
+                  <label for="date">Birthday</label>
+                  <input type="date" id="date" name="date" value="" min="1990-01-01" max="2094-01-01">
+                  <input type="hidden" name="csrf_token" value="687898"><br><br>
+                  <label for="file">Choose your pictures</label>
+                  <input type="file" id="file" name="file" multiple >
+                   <br><br>
+                   <input type="submit" value="Submit">
+                   <input type="reset" value="Reset"><br><br>
+                   <label for="description">Description</label><br>
+                  <textarea id="description" name="description" rows="5" cols="50"></textarea><br><br>
+                  <label for="color">Choose color</label><br>
+                  <select id="color" name="color" size="3" multiple>
+                    <option value="1">Blue</option>
+                    <option value="2">Red</option>
+                    <option value="3" selected>White</option>
+                    <option value="4">Black</option>
+                    <option value="5">Green</option>
+                  </select>
+                  <br><br>
+                  <label for="pet">Choose pet</label>
+                  <input id="pet" name="pets" list="petname">
+                  <datalist id="petname">
+                    <option value="Cat">
+                    <option value="Tiger">
+                    <option value="Dog">
+                    <option value="Lion">
+                    <option value="Fish">
+                  </datalist>
+                </form>
+      </section>
+
+      <section id="contact">
+        <h2>Contact</h2>
+        <p>
+          Feel free to reach out via email or social media if you $&nbsp;2000 have any
+          questions or comments.
+        </p>
+      </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+      <p>&copy; 2024 Simple Website. All rights reserved.</p>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop">Back to Top</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      // jQuery to add dynamic greeting
+      function updateGreeting() {
+        const currentHour = new Date().getHours();
+
+        if (currentHour < 12) {
+          $("#greeting").text("Good Morning! Welcome to Pet Shop");
+        } else if (currentHour < 18) {
+          $("#greeting").text("Good Afternoon! Welcome to Pet Shop");
+        } else {
+          $("#greeting").text("Good Evening! Welcome to Pet Shop");
+        }
+      }
+
+      // jQuery to show/hide "Back to Top" button
+      $(window).scroll(function () {
+        if ($(this).scrollTop() > 10) {
+          $("#backToTop").fadeIn();
+        } else {
+          $("#backToTop").fadeOut();
+        }
+      });
+
+      // Function to scroll to the top of the page
+      function scrollToTop() {
+        $("html, body").animate({ scrollTop: 0 }, "fast");
+      }
+
+      // Attach click event to "Back to Top" button
+      $("#backToTop").on("click", scrollToTop);
+
+      // Call the updateGreeting function on page load
+      $(document).ready(function () {
+        updateGreeting();
+      });
+    </script>
+  </body>
+</html>
