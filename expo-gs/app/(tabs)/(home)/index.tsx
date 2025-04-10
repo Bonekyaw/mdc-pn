@@ -7,6 +7,7 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Link href="/settings/david">Go to Settings</Link>
       <Link href="/detail?id=7">Go to Home Detail</Link>
       <Link href={{ pathname: "/detail", params: { id: 9 } }}>
         Go to Detail

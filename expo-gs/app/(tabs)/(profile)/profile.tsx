@@ -5,7 +5,7 @@ import { Link } from "expo-router";
 export default function Profile() {
   return (
     <View>
-      <Link href="/detail">Go to Home Detail</Link>
+      <Link href="/settings/backem">Go to Setting</Link>
       <Text>profile screen </Text>
     </View>
   );
