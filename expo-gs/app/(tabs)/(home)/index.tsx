@@ -7,7 +7,9 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Link href="/settings/david">Go to Settings</Link>
+      <Link href="/settings/david" style={{ fontFamily: "SpaceMono" }}>
+        Go to Settings
+      </Link>
       <Link href="/detail?id=7">Go to Home Detail</Link>
       <Link href={{ pathname: "/detail", params: { id: 9 } }}>
         Go to Detail
@@ -21,3 +23,10 @@ export default function HomeScreen() {
     </View>
   );
 }
+
+// 1. Local font
+//      a. expo-font config
+//      b. useFonts
+// 2. Google font
+//      a. expo-font
+//      b. useFonts
