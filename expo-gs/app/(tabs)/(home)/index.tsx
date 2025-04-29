@@ -25,7 +25,7 @@ export default function HomeScreen() {
 }
 
 // 1. Local font
-//      a. expo-font config
+//      a. expo-font config ( Expo 50^, Dev Build )
 //      b. useFonts
 // 2. Google font
 //      a. expo-font

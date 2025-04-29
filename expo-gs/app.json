@@ -37,6 +37,21 @@
           "resizeMode": "contain",
           "backgroundColor": "#feccbb"
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Oswald-Bold.ttf",
+            "./assets/fonts/SpaceMono-Regular.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": ["./assets/images/gitme.png"]
+        }
       ]
     ],
     "experiments": {

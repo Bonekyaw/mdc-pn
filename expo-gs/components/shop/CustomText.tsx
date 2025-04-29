@@ -1,7 +1,7 @@
 import { Text, type TextProps } from "react-native";
 
 export default function CustomText({ style, ...rest }: TextProps) {
-  return <Text style={[style, { fontFamily: "SpaceMono" }]} {...rest} />;
+  return <Text style={[{ fontFamily: "SpaceMono" }, style]} {...rest} />;
 }
 
 // import CustomText from "./CustomText";
