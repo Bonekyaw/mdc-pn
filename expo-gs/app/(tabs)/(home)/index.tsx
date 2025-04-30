@@ -1,12 +1,20 @@
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View, Button } from "react-native"; // Core components
+// import { ThemedText } from "@/components/ThemedText";
+// import { ThemedView } from "@/components/ThemedView";
 
 export default function HomeScreen() {
   const router = useRouter();
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Link href="/settings/david" style={{ fontFamily: "SpaceMono" }}>
         Go to Settings
       </Link>
