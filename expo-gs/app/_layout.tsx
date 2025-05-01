@@ -16,6 +16,7 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { CountProvider } from "@/providers/countContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -41,10 +42,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{}}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <CountProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </CountProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );
