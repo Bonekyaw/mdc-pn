@@ -5,16 +5,18 @@ type CategoryProps = {
   id: number;
   name: string;
   image: any;
+  select: number;
+  onSelect: (id: number) => void;
 };
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-const Category = ({ id, name, image }: CategoryProps) => {
+const Category = ({ id, name, image, select, onSelect }: CategoryProps) => {
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={() => onSelect(id)}>
       <Image
-        style={styles.image}
+        style={[styles.image, select === id && styles.select]}
         source={image}
         placeholder={{ blurhash }}
         contentFit="cover"
@@ -40,5 +42,10 @@ const styles = StyleSheet.create({
   caption: {
     fontSize: 12,
     fontWeight: "600",
+  },
+  select: {
+    borderColor: "orange",
+    borderWidth: 2,
+    borderRadius: 28,
   },
 });
