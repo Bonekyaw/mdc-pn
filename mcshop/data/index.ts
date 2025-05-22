@@ -46,7 +46,7 @@ export const products = [
     price: 295.5,
     discount: 550,
     image: t1,
-    favourite: true,
+    users: [{ id: 1 }],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -74,7 +74,7 @@ export const products = [
     price: 199.5,
     discount: 0,
     image: t3,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -102,7 +102,7 @@ export const products = [
     price: 255,
     discount: 0,
     image: t2,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -130,7 +130,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: t4,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -158,7 +158,7 @@ export const products = [
     price: 295,
     discount: 550,
     image: w1,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -186,7 +186,7 @@ export const products = [
     price: 255,
     discount: 0,
     image: w2,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -214,7 +214,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: w4,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -242,7 +242,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: w5,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -270,7 +270,7 @@ export const products = [
     price: 295.5,
     discount: 550,
     image: t1,
-    favourite: true,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -298,7 +298,7 @@ export const products = [
     price: 199.5,
     discount: 0,
     image: t3,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -326,7 +326,7 @@ export const products = [
     price: 255,
     discount: 0,
     image: t2,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -354,7 +354,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: t4,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -382,7 +382,7 @@ export const products = [
     price: 295,
     discount: 550,
     image: w1,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -410,7 +410,7 @@ export const products = [
     price: 255,
     discount: 0,
     image: w2,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -438,7 +438,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: w4,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -466,7 +466,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: w5,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -494,7 +494,7 @@ export const products = [
     price: 255,
     discount: 0,
     image: w2,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -522,7 +522,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: w4,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },
@@ -550,7 +550,7 @@ export const products = [
     price: 220,
     discount: 0,
     image: w5,
-    favourite: false,
+    users: [],
     colors: [
       { id: 1, name: "black", bgColor: "#000000", stock: true },
       { id: 2, name: "blue", bgColor: "#2B4CC3", stock: true },

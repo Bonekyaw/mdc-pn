@@ -22,6 +22,8 @@ const MAPPING = {
   "chevron.left.forwardslash.chevron.right": "code",
   "chevron.right": "chevron-right",
   cart: "shopping-cart",
+  heart: "favorite-outline",
+  "heart.fill": "favorite",
 } as IconMapping;
 
 /**
