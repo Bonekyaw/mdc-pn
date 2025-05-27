@@ -1,5 +1,13 @@
 import { useState, useCallback } from "react";
-import { StyleSheet, View, FlatList, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  // FlatList,
+  Dimensions,
+  Pressable,
+  Text,
+  ScrollView,
+} from "react-native";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
@@ -17,6 +25,7 @@ export default function HomeScreen() {
   const [select, setSelect] = useState(1);
   const width = Dimensions.get("screen").width;
   const numColumns = width < 600 ? 2 : width < 768 ? 3 : 4;
+  const itemWidth = width / numColumns - 30;
 
   const handleSelect = useCallback((id: number) => {
     setSelect(id);
@@ -34,44 +43,48 @@ export default function HomeScreen() {
         />
         <Cart />
       </View>
-      <FlatList
-        ListHeaderComponent={() => (
-          <>
-            <Image
-              style={styles.banner}
-              source={require("@/data/shop/banner6.png")}
-              placeholder={{ blurhash }}
-              contentFit="cover"
-              transition={1000}
-            />
-            <View style={{ paddingHorizontal: 15 }}>
-              <Title title="Shop By Category" btnText="See All" />
-              <FlashList
-                data={categories}
-                extraData={select}
-                renderItem={({ item }) => (
-                  <Category {...item} select={select} onSelect={handleSelect} />
-                )}
-                keyExtractor={(item) => item.id.toString()}
-                horizontal
-                estimatedItemSize={90}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingVertical: 10 }}
-              />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Image
+          style={styles.banner}
+          source={require("@/data/shop/banner6.png")}
+          placeholder={{ blurhash }}
+          contentFit="cover"
+          transition={1000}
+        />
+        <View style={{ paddingHorizontal: 15 }}>
+          <Title title="Shop By Category" btnText="See All" />
+          <FlashList
+            data={categories}
+            extraData={select}
+            renderItem={({ item }) => (
+              <Category {...item} select={select} onSelect={handleSelect} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            estimatedItemSize={90}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 10 }}
+          />
 
-              <Title title="Recommended for You" btnText="See All" />
+          <Title title="Recommended for You" btnText="See All" />
+        </View>
+        <FlashList
+          data={products}
+          numColumns={numColumns}
+          renderItem={({ item }) => <Product {...item} itemWidth={itemWidth} />}
+          keyExtractor={(item) => item.id.toString()}
+          estimatedItemSize={300}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 15 }}
+          ListFooterComponent={() => (
+            <View style={{ height: 150 }}>
+              <Pressable style={styles.button}>
+                <Text style={styles.btnText}>Explore more</Text>
+              </Pressable>
             </View>
-          </>
-        )}
-        data={products}
-        numColumns={numColumns}
-        renderItem={({ item }) => <Product {...item} />}
-        keyExtractor={(item) => item.id.toString()}
-        // estimatedItemSize={300}
-        showsVerticalScrollIndicator={false}
-        columnWrapperStyle={{ paddingHorizontal: 15 }}
-        // contentContainerStyle={{ paddingVertical: 15 }}
-      />
+          )}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -95,5 +108,18 @@ const styles = StyleSheet.create({
   banner: {
     width: "100%",
     aspectRatio: 20 / 9,
+  },
+  button: {
+    marginTop: 10,
+    marginHorizontal: "auto",
+    alignItems: "center",
+    backgroundColor: "#007618",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 7,
+  },
+  btnText: {
+    color: "white",
+    fontWeight: "500",
   },
 });

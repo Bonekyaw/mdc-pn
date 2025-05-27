@@ -24,6 +24,7 @@ const MAPPING = {
   cart: "shopping-cart",
   heart: "favorite-outline",
   "heart.fill": "favorite",
+  star: "star-outline",
 } as IconMapping;
 
 /**
