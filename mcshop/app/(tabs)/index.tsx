@@ -25,7 +25,6 @@ export default function HomeScreen() {
   const [select, setSelect] = useState(1);
   const width = Dimensions.get("screen").width;
   const numColumns = width < 600 ? 2 : width < 768 ? 3 : 4;
-  const itemWidth = width / numColumns - 30;
 
   const handleSelect = useCallback((id: number) => {
     setSelect(id);
@@ -71,7 +70,7 @@ export default function HomeScreen() {
         <FlashList
           data={products}
           numColumns={numColumns}
-          renderItem={({ item }) => <Product {...item} itemWidth={itemWidth} />}
+          renderItem={({ item }) => <Product {...item} />}
           keyExtractor={(item) => item.id.toString()}
           estimatedItemSize={300}
           showsVerticalScrollIndicator={false}
