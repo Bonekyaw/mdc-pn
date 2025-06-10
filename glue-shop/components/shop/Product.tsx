@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 
 import { Card } from "@/components/ui/card";
 import { Pressable } from "@/components/ui/pressable";
@@ -25,8 +26,10 @@ const Product = ({
   image,
   users,
 }: ProductType) => {
+  const router = useRouter();
+
   return (
-    <Pressable className="mx-2 mb-4">
+    <Pressable className="mx-2 mb-4" onPress={() => router.navigate("/detail")}>
       <Card className="p-0">
         <Image
           style={{ width: "100%", aspectRatio: 3 / 4, borderRadius: 5 }}
