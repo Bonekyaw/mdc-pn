@@ -16,6 +16,7 @@ import {
   CheckIcon,
   AddIcon,
   RemoveIcon,
+  CloseCircleIcon,
 } from "@/components/ui/icon";
 import {
   Checkbox,
@@ -34,24 +35,49 @@ import {
 import {
   Actionsheet,
   ActionsheetContent,
-  ActionsheetItem,
-  ActionsheetItemText,
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
   ActionsheetBackdrop,
 } from "@/components/ui/actionsheet";
+import { Box } from "@/components/ui/box";
+import { Fab, FabLabel, FabIcon } from "@/components/ui/fab";
+
+type CartProps = {
+  id: number;
+  color: string;
+  size: string;
+  quantity: number;
+};
 
 const Detail = () => {
   const { id } = useLocalSearchParams();
   const [more, setMore] = useState(false);
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
+  const [cart, setCart] = useState<CartProps[]>([]);
   const product = products.find((p) => p.id === +id);
 
   const [quantity, setQuantity] = useState(1);
   const [showActionsheet, setShowActionsheet] = useState(false);
   const handleClose = () => setShowActionsheet(false);
-  const submitHandler = () => setShowActionsheet(false);
+  const submitHandler = () => {
+    setShowActionsheet(false);
+    if (quantity === 0) {
+      return;
+    }
+    colors.forEach((color) => {
+      sizes.forEach((size) => {
+        setCart((prev) => [
+          { id: Math.random(), color, size, quantity },
+          ...prev,
+        ]);
+      });
+    });
+    //Reset
+    setColors([]);
+    setSizes([]);
+    setQuantity(1);
+  };
 
   const toast = useToast();
   const [toastId, setToastId] = useState(0);
@@ -191,8 +217,40 @@ const Detail = () => {
           >
             <ButtonText>Set Quantity</ButtonText>
           </Button>
+          {cart.length > 0 && (
+            <VStack space="sm">
+              {cart.map((c) => (
+                <HStack
+                  key={c.id}
+                  className="items-center justify-between rounded-md bg-slate-100 px-2 py-1"
+                >
+                  <HStack className="items-center" space="md">
+                    <Icon as={AddIcon} size="sm" />
+                    <Text>
+                      {c.color} - {c.size} ( {c.quantity} )
+                    </Text>
+                  </HStack>
+                  <Button
+                    size="md"
+                    className="mr-4"
+                    variant="link"
+                    onPress={() =>
+                      setCart((prev) => prev.filter((item) => item.id !== c.id))
+                    }
+                  >
+                    <ButtonIcon as={CloseCircleIcon} />
+                  </Button>
+                </HStack>
+              ))}
+            </VStack>
+          )}
         </VStack>
+        <Box className="h-40" />
       </ScrollView>
+      <Fab size="md" placement="bottom right" className="mb-24 bg-green-500">
+        <FabIcon as={AddIcon} size="md" />
+        <FabLabel bold>Add To Cart</FabLabel>
+      </Fab>
       <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
         <ActionsheetBackdrop />
         <ActionsheetContent>
