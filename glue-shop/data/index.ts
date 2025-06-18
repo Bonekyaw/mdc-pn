@@ -590,3 +590,27 @@ export const sizes = [
   { id: 5, name: "XL", stock: true },
   { id: 6, name: "XXL", stock: true },
 ];
+
+export const carts = [
+  {
+    id: 1,
+    title: "Oversized Fit Printed Mesh T-Shirt",
+    price: 295.5,
+    image: t1,
+    items: [
+      { id: 1, color: "blue", size: "S", quantity: 2 },
+      { id: 2, color: "white", size: "M", quantity: 3 },
+    ],
+  },
+  {
+    id: 2,
+    title: "Loose Fit T-Shirt",
+    price: 199.5,
+    image: t3,
+    items: [
+      { id: 1, color: "black", size: "L", quantity: 1 },
+      { id: 2, color: "blue", size: "XL", quantity: 2 },
+      { id: 3, color: "white", size: "S", quantity: 3 },
+    ],
+  },
+];

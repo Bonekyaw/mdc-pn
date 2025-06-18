@@ -21,3 +21,18 @@ export interface ProductType {
   users: UserType[];
   description: string;
 }
+
+export interface CartItem {
+  id: number;
+  color: string;
+  size: string;
+  quantity: number;
+}
+
+export interface CartType {
+  id: number;
+  title: string;
+  price: number;
+  image: any;
+  items: CartItem[];
+}
