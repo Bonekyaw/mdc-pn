@@ -1,4 +1,5 @@
-import { ScrollView } from "react-native";
+import { useState } from "react";
+import { ScrollView, Alert } from "react-native";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,13 +10,45 @@ import { VStack } from "@/components/ui/vstack";
 import { carts } from "@/data";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { AddIcon, RemoveIcon, TrashIcon } from "@/components/ui/icon";
+import { AddIcon, Icon, RemoveIcon, TrashIcon } from "@/components/ui/icon";
 import { Fab, FabIcon } from "@/components/ui/fab";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogBody,
+  AlertDialogBackdrop,
+} from "@/components/ui/alert-dialog";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 export default function CartScreen() {
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const handleClose = () => setShowAlertDialog(false);
+
+  const deleteAllCarts = () => {
+    Alert.alert(
+      "Delete All Carts",
+      "Are you sure you want to delete all carts?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            // Logic to delete all carts
+            console.log("All carts deleted");
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white px-4">
       {carts.length === 0 ? (
@@ -23,7 +56,12 @@ export default function CartScreen() {
       ) : (
         <Box className="flex-1">
           <Heading className="mb-6 mt-2 text-center">Shopping Cart - 4</Heading>
-          <Fab size="md" placement="bottom right" className="mb-16 bg-red-400">
+          <Fab
+            size="md"
+            placement="bottom right"
+            className="mb-16 bg-red-400"
+            onPress={deleteAllCarts}
+          >
             <FabIcon as={TrashIcon} />
           </Fab>
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -78,7 +116,13 @@ export default function CartScreen() {
                           >
                             <ButtonIcon as={RemoveIcon} />
                           </Button>
-                          <Button size="sm" variant="link" className="ml-2">
+                          {/* Delete Button */}
+                          <Button
+                            size="sm"
+                            variant="link"
+                            className="ml-2"
+                            onPress={() => setShowAlertDialog(true)}
+                          >
                             <ButtonIcon as={TrashIcon} />
                           </Button>
                         </HStack>
@@ -98,6 +142,42 @@ export default function CartScreen() {
           </ScrollView>
         </Box>
       )}
+      <AlertDialog isOpen={showAlertDialog} onClose={handleClose}>
+        <AlertDialogBackdrop />
+        <AlertDialogContent className="w-full max-w-[415px] items-center gap-4">
+          <Box className="h-[52px] w-[52px] items-center justify-center rounded-full bg-background-error">
+            <Icon as={TrashIcon} size="lg" className="stroke-error-500" />
+          </Box>
+          <AlertDialogHeader className="mb-2">
+            <Heading size="md">Delete this item?</Heading>
+          </AlertDialogHeader>
+          <AlertDialogBody>
+            <Text size="sm" className="text-center">
+              Are you sure? This product will be deleted from your cart. This
+              cannot be undone.
+            </Text>
+          </AlertDialogBody>
+          <AlertDialogFooter className="mt-5">
+            <Button
+              size="sm"
+              action="negative"
+              onPress={handleClose}
+              className="px-[30px]"
+            >
+              <ButtonText>Delete</ButtonText>
+            </Button>
+            <Button
+              variant="outline"
+              action="secondary"
+              onPress={handleClose}
+              size="sm"
+              className="px-[30px]"
+            >
+              <ButtonText>Cancel</ButtonText>
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SafeAreaView>
   );
 }

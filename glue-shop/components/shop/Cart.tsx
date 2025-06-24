@@ -1,15 +1,21 @@
 import { ShoppingCart } from "lucide-react-native";
+import { useRouter } from "expo-router";
 
 import { Badge, BadgeText } from "@/components/ui/badge";
-import { Box } from "@/components/ui/box";
+// import { Box } from "@/components/ui/box";
 import { Icon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
+import { Pressable } from "../ui/pressable";
 
 const Cart = () => {
+  const router = useRouter();
   const totalItems = 2;
 
   return (
-    <Box className="items-center">
+    <Pressable
+      className="items-center"
+      onPress={() => router.navigate("/cart")}
+    >
       <VStack>
         <Badge
           className={`z-10 self-end ${
@@ -21,7 +27,7 @@ const Cart = () => {
         </Badge>
         <Icon as={ShoppingCart} size="xl" />
       </VStack>
-    </Box>
+    </Pressable>
   );
 };
 
