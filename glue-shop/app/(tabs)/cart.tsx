@@ -2,12 +2,13 @@ import { useState } from "react";
 import { ScrollView, Alert } from "react-native";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
-import { carts } from "@/data";
+// import { carts } from "@/data";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { AddIcon, Icon, RemoveIcon, TrashIcon } from "@/components/ui/icon";
@@ -20,11 +21,14 @@ import {
   AlertDialogBody,
   AlertDialogBackdrop,
 } from "@/components/ui/alert-dialog";
+import useCartStore from "@/store/cartStore";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 export default function CartScreen() {
+  const router = useRouter();
+  const { carts, clearCart, getTotalItems, getTotalPrice } = useCartStore();
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const handleClose = () => setShowAlertDialog(false);
 
@@ -41,8 +45,7 @@ export default function CartScreen() {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            // Logic to delete all carts
-            console.log("All carts deleted");
+            clearCart();
           },
         },
       ],
@@ -52,10 +55,27 @@ export default function CartScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white px-4">
       {carts.length === 0 ? (
-        <Text>Empty cart</Text>
+        <Box className="flex-1 items-center justify-center">
+          <Heading className="mb-4 text-center">Your Cart is Empty</Heading>
+          <Text className="mb-6 text-center text-gray-500">
+            Add some products to your cart to see them here.
+          </Text>
+          <Button
+            size="lg"
+            className="bg-blue-500"
+            onPress={() => {
+              // Navigate to the shop or products page
+              router.navigate("/");
+            }}
+          >
+            <ButtonText>Go to Shop</ButtonText>
+          </Button>
+        </Box>
       ) : (
         <Box className="flex-1">
-          <Heading className="mb-6 mt-2 text-center">Shopping Cart - 4</Heading>
+          <Heading className="mb-6 mt-2 text-center">
+            Shopping Cart - {getTotalItems()}
+          </Heading>
           <Fab
             size="md"
             placement="bottom right"
@@ -89,10 +109,10 @@ export default function CartScreen() {
                     {product.items.map((item) => (
                       <HStack
                         key={item.id}
-                        className="items-center justify-center"
+                        className="items-center"
                         space="3xl"
                       >
-                        <VStack>
+                        <VStack className="w-1/3 items-end">
                           <Text size="sm" className="font-light">
                             {item.color} - {item.size}
                           </Text>
@@ -100,7 +120,7 @@ export default function CartScreen() {
                             ${product.price} x {item.quantity}
                           </Text>
                         </VStack>
-                        <HStack space="sm" className="items-center">
+                        <HStack space="sm" className="w-2/3 items-center">
                           <Button
                             size="xs"
                             variant="outline"
@@ -134,7 +154,7 @@ export default function CartScreen() {
             </VStack>
             <HStack className="my-6 justify-between">
               <Text bold>Total Price :</Text>
-              <Text bold>$2700</Text>
+              <Text bold>${getTotalPrice()}</Text>
             </HStack>
             <Button size="lg" className="bg-green-500">
               <ButtonText>Checkout</ButtonText>

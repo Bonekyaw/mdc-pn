@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import { VStack } from "@/components/ui/vstack";
 import ViewPager from "@/components/shop/ViewPager";
@@ -41,21 +41,19 @@ import {
 } from "@/components/ui/actionsheet";
 import { Box } from "@/components/ui/box";
 import { Fab, FabLabel, FabIcon } from "@/components/ui/fab";
-
-type CartProps = {
-  id: number;
-  color: string;
-  size: string;
-  quantity: number;
-};
+import useCartStore from "@/store/cartStore";
+import type { CartItem } from "@/types";
 
 const Detail = () => {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
   const [more, setMore] = useState(false);
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
-  const [cart, setCart] = useState<CartProps[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const product = products.find((p) => p.id === +id);
+  const { addToCart } = useCartStore();
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   const [quantity, setQuantity] = useState(1);
   const [showActionsheet, setShowActionsheet] = useState(false);
@@ -103,6 +101,25 @@ const Detail = () => {
         );
       },
     });
+  };
+
+  const addCartToStore = () => {
+    if (cart.length === 0) {
+      handleToast("Cart is empty", "Please add items to your cart first");
+      return;
+    }
+
+    const cartProduct = {
+      id: product!.id,
+      title: product!.title,
+      image: product!.image,
+      price: product!.price,
+      items: cart,
+    };
+
+    addToCart(cartProduct);
+    setCart([]);
+    router.back();
   };
 
   return (
@@ -217,6 +234,11 @@ const Detail = () => {
           >
             <ButtonText>Set Quantity</ButtonText>
           </Button>
+          {totalItems > 0 && (
+            <Text size="md" className="ml-2 font-semibold text-gray-500">
+              Total Price - ${Number(product!.price.toFixed(2)) * totalItems}
+            </Text>
+          )}
           {cart.length > 0 && (
             <VStack space="sm">
               {cart.map((c) => (
@@ -247,7 +269,12 @@ const Detail = () => {
         </VStack>
         <Box className="h-40" />
       </ScrollView>
-      <Fab size="md" placement="bottom right" className="mb-24 bg-green-500">
+      <Fab
+        size="md"
+        placement="bottom right"
+        className="mb-24 bg-green-500"
+        onPress={addCartToStore}
+      >
         <FabIcon as={AddIcon} size="md" />
         <FabLabel bold>Add To Cart</FabLabel>
       </Fab>

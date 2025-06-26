@@ -71,7 +71,7 @@ export const products = [
     title: "Loose Fit T-Shirt",
     star: 4.7,
     quantity: 201,
-    price: 199.5,
+    price: 99.5,
     discount: 0,
     image: t3,
     users: [],

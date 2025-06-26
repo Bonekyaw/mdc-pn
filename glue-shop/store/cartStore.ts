@@ -11,9 +11,9 @@ type Actions = {
   addToCart: (product: CartType) => void;
   // updateCart: (productId: number, itemId: number, quantity: number) => void;
   // removeFromCart: (productId: number, itemId: number) => void;
-  // clearCart: () => void;
+  clearCart: () => void;
   getTotalItems: () => number;
-  // getTotalPrice: () => number;
+  getTotalPrice: () => number;
 };
 
 const initialState: State = {
@@ -53,12 +53,26 @@ const useCartStore = create<State & Actions>()(
         } else state.carts.push(product);
       });
     },
+    clearCart: () => set({ carts: [] }),
     getTotalItems: () => {
       const { carts } = get();
 
       return carts.reduce(
         (total, cart) =>
           total + cart.items.reduce((total, item) => total + item.quantity, 0),
+        0,
+      );
+    },
+    getTotalPrice: () => {
+      const { carts } = get();
+
+      return carts.reduce(
+        (total, cart) =>
+          total +
+          cart.items.reduce(
+            (itemTotal, item) => itemTotal + item.quantity * cart.price,
+            0,
+          ),
         0,
       );
     },
