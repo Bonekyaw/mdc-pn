@@ -28,9 +28,24 @@ const blurhash =
 
 export default function CartScreen() {
   const router = useRouter();
-  const { carts, clearCart, getTotalItems, getTotalPrice } = useCartStore();
+  const {
+    carts,
+    clearCart,
+    updateCart,
+    removeFromCart,
+    getTotalItems,
+    getTotalPrice,
+  } = useCartStore();
+  const [deleteProduct, setDeleteProduct] = useState<{
+    productId: number;
+    itemId: number;
+  }>();
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const handleClose = () => setShowAlertDialog(false);
+  const handleDelete = () => {
+    removeFromCart(deleteProduct!.productId, deleteProduct!.itemId);
+    setShowAlertDialog(false);
+  };
 
   const deleteAllCarts = () => {
     Alert.alert(
@@ -125,6 +140,9 @@ export default function CartScreen() {
                             size="xs"
                             variant="outline"
                             className="border-gray-300"
+                            onPress={() =>
+                              updateCart(product.id, item.id, item.quantity + 1)
+                            }
                           >
                             <ButtonIcon as={AddIcon} />
                           </Button>
@@ -133,6 +151,10 @@ export default function CartScreen() {
                             size="xs"
                             variant="outline"
                             className="border-gray-300"
+                            onPress={() =>
+                              updateCart(product.id, item.id, item.quantity - 1)
+                            }
+                            isDisabled={item.quantity <= 1 ? true : false}
                           >
                             <ButtonIcon as={RemoveIcon} />
                           </Button>
@@ -141,7 +163,13 @@ export default function CartScreen() {
                             size="sm"
                             variant="link"
                             className="ml-2"
-                            onPress={() => setShowAlertDialog(true)}
+                            onPress={() => {
+                              setDeleteProduct({
+                                productId: product.id,
+                                itemId: item.id,
+                              });
+                              setShowAlertDialog(true);
+                            }}
                           >
                             <ButtonIcon as={TrashIcon} />
                           </Button>
@@ -181,7 +209,7 @@ export default function CartScreen() {
             <Button
               size="sm"
               action="negative"
-              onPress={handleClose}
+              onPress={handleDelete}
               className="px-[30px]"
             >
               <ButtonText>Delete</ButtonText>

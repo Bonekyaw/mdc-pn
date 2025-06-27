@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import type { CartItem, CartType } from "@/types";
+import type { CartType } from "@/types";
 
 type State = {
   carts: CartType[];
@@ -9,8 +9,8 @@ type State = {
 
 type Actions = {
   addToCart: (product: CartType) => void;
-  // updateCart: (productId: number, itemId: number, quantity: number) => void;
-  // removeFromCart: (productId: number, itemId: number) => void;
+  updateCart: (productId: number, itemId: number, quantity: number) => void;
+  removeFromCart: (productId: number, itemId: number) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
@@ -51,6 +51,58 @@ const useCartStore = create<State & Actions>()(
             }
           });
         } else state.carts.push(product);
+      });
+    },
+    updateCart: (productId, itemId, quantity) => {
+      set((state) => {
+        // Check if the product already exists in the cart
+        const existingCartIndex = state.carts.findIndex(
+          (cart) => cart.id === productId,
+        );
+
+        if (existingCartIndex < 0) return;
+
+        const existingItemIndex = state.carts[
+          existingCartIndex
+        ].items.findIndex((item) => item.id === itemId);
+
+        if (existingItemIndex < 0) return;
+
+        state.carts[existingCartIndex].items[existingItemIndex].quantity =
+          quantity;
+
+        // If the quantity is 0, remove the item from the cart
+        if (quantity <= 0) {
+          state.carts[existingCartIndex].items.splice(existingItemIndex, 1);
+        }
+        // If the cart is empty after removing the item, remove the cart
+        if (state.carts[existingCartIndex].items.length === 0) {
+          state.carts.splice(existingCartIndex, 1);
+        }
+      });
+    },
+    removeFromCart: (productId, itemId) => {
+      set((state) => {
+        // Check if the product already exists in the cart
+        const existingCartIndex = state.carts.findIndex(
+          (cart) => cart.id === productId,
+        );
+
+        if (existingCartIndex < 0) return;
+
+        const existingItemIndex = state.carts[
+          existingCartIndex
+        ].items.findIndex((item) => item.id === itemId);
+
+        if (existingItemIndex < 0) return;
+
+        // Remove the item from the cart
+        state.carts[existingCartIndex].items.splice(existingItemIndex, 1);
+
+        // If the cart is empty after removing the item, remove the cart
+        if (state.carts[existingCartIndex].items.length === 0) {
+          state.carts.splice(existingCartIndex, 1);
+        }
       });
     },
     clearCart: () => set({ carts: [] }),
