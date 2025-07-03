@@ -13,6 +13,9 @@
       "bundleIdentifier": "com.phonenyo.expogs",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "config": {
+        "usesNonExemptEncryption": false
       }
     },
     "android": {
@@ -52,7 +55,8 @@
         {
           "assets": ["./assets/images/gitme.png"]
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
