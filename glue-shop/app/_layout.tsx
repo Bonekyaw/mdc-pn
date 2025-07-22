@@ -18,7 +18,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const { isLoggedIn, _hasHydrated } = useAuthStore();
+  const { isLoggedIn, _hasHydrated, isOtpScreen } = useAuthStore();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -49,6 +49,10 @@ export default function RootLayout() {
 
           <Stack.Protected guard={!isLoggedIn}>
             <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Protected guard={isOtpScreen}>
+              <Stack.Screen name="verify" options={{ headerShown: false }} />
+            </Stack.Protected>
           </Stack.Protected>
         </Stack>
         <StatusBar style="auto" />
