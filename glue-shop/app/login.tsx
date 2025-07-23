@@ -8,7 +8,7 @@ export default function Login() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Register Screen</Text>
+      <Text>Login Screen</Text>
       <Text
         style={{ fontSize: 24, marginBottom: 20 }}
         onPress={() => {
