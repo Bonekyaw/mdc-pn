@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
@@ -24,9 +24,9 @@ export default function HomeScreen() {
   const width = Dimensions.get("screen").width;
   const numColumns = width < 600 ? 2 : width < 768 ? 3 : 4;
 
-  const handleSelect = useCallback((id: number) => {
+  const handleSelect = (id: number) => {
     setSelect(id);
-  }, []);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">

@@ -1,7 +1,8 @@
-import { View, Text, Button, BackHandler, Alert } from "react-native";
+import { View, Text, Button, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { OtpInput } from "react-native-otp-entry";
 import { useRouter } from "expo-router";
+import { usePreventRemove } from "@react-navigation/native";
 
 import { useAuthStore } from "@/store/authStore";
 import { formatTime } from "@/utils";
@@ -25,29 +26,43 @@ const OtpScreen = () => {
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    const backAction = () => {
-      if (timeLeft > 0) {
-        return true; // Prevent back navigation if time is left
-      }
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+  usePreventRemove(timeLeft > 0, () => {
+    Alert.alert(
+      "Hold on!",
+      `Please wait ${formatTime(timeLeft)} before leaving`,
+      [
         {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel",
+          text: "OK",
+          // onPress: () => null,
+          style: "default",
         },
-        { text: "YES", onPress: () => router.back() },
-      ]);
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction,
+      ],
     );
+  });
 
-    return () => backHandler.remove();
-  }, [router, timeLeft]);
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     if (timeLeft > 0) {
+  //       return true; // Prevent back navigation if time is left
+  //     }
+  //     Alert.alert("Hold on!", "Are you sure you want to go back?", [
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => null,
+  //         style: "cancel",
+  //       },
+  //       { text: "YES", onPress: () => router.back() },
+  //     ]);
+  //     return true;
+  //   };
+
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     backAction,
+  //   );
+
+  //   return () => backHandler.remove();
+  // }, [router, timeLeft]);
 
   const handleOtpFilled = (otp: string) => {
     //console.log(`OTP is ${otp}`);
