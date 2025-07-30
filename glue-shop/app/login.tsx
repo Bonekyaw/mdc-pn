@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ScrollView } from "react-native";
-import { Link } from "expo-router";
+import { ActivityIndicator, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
+import { isAxiosError } from "axios";
 import { useForm, Controller } from "react-hook-form";
 
 import { useAuthStore } from "@/store/authStore";
@@ -21,6 +21,13 @@ import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icon";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
+import { authApi } from "@/api";
+import {
+  useToast,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+} from "@/components/ui/toast";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -28,6 +35,7 @@ const blurhash =
 export default function Login() {
   const { login } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleShowPassword = () => setShowPassword((showState) => !showState);
 
@@ -41,7 +49,63 @@ export default function Login() {
       password: "",
     },
   });
-  const onSubmit = async (formState: any) => console.log(formState);
+
+  const toast = useToast();
+  const [toastId, setToastId] = useState(0);
+  const handleToast = (title: string, description: string) => {
+    if (!toast.isActive(toastId.toString())) {
+      showNewToast(title, description);
+    }
+  };
+  const showNewToast = (title: string, description: string) => {
+    const newId = Math.random();
+    setToastId(newId);
+    toast.show({
+      id: newId.toString(),
+      placement: "bottom",
+      duration: 2000,
+      render: ({ id }) => {
+        const uniqueToastId = "toast-" + id;
+        return (
+          <Toast nativeID={uniqueToastId} action="error" variant="solid">
+            <ToastTitle>{title}</ToastTitle>
+            <ToastDescription>{description}</ToastDescription>
+          </Toast>
+        );
+      },
+    });
+  };
+
+  const onSubmit = async (formState: any) => {
+    //console.log(formState);
+    setIsSubmitting(true);
+    const { phone, password } = formState;
+    try {
+      const response = await authApi.post("login", {
+        phone,
+        password,
+      });
+
+      //console.log("Login successful:", response.data);
+      const { token, refreshToken, randToken } = response.data;
+      login({ accessToken: token, refreshToken, randomToken: randToken });
+    } catch (error) {
+      // console.error("Login failed:", error);
+      if (isAxiosError(error)) {
+        // Handle Axios error
+        // console.error("Axios error:", error.response?.data);
+        handleToast(
+          "Login failed!",
+          error.response?.data.message || "An error occurred during login.",
+        );
+      } else {
+        // Handle other errors
+        handleToast("Login failed!", "An error occurred during login.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white px-5">
@@ -186,8 +250,13 @@ export default function Login() {
           <Button
             className="h-16 rounded-lg bg-blue-600"
             onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
           >
-            <ButtonText className="text-lg font-bold">Sign In</ButtonText>
+            {isSubmitting ? (
+              <ActivityIndicator />
+            ) : (
+              <ButtonText className="text-lg font-bold">Sign In</ButtonText>
+            )}
           </Button>
         </VStack>
         <VStack space="lg" className="mt-6">
