@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { isAxiosError } from "axios";
 import { useForm, Controller } from "react-hook-form";
+import { Link } from "expo-router";
 
 import { useAuthStore } from "@/store/authStore";
 import { HStack } from "@/components/ui/hstack";
@@ -262,9 +263,11 @@ export default function Login() {
         <VStack space="lg" className="mt-6">
           <Divider className="bg-gray-300" />
           <Text className="text-center">Create an account ?</Text>
-          <Button className="h-16 rounded-lg bg-sky-400">
-            <ButtonText className="text-lg font-bold">Sign Up</ButtonText>
-          </Button>
+          <Link href="/register" asChild>
+            <Button className="h-16 rounded-lg bg-sky-400">
+              <ButtonText className="text-lg font-bold">Sign Up</ButtonText>
+            </Button>
+          </Link>
         </VStack>
       </ScrollView>
     </SafeAreaView>
