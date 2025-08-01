@@ -16,7 +16,7 @@ type State = {
 
 type Actions = {
   setOtpScreen: (phone: string, token: string) => void;
-  setPasswordScreen: () => void;
+  setPasswordScreen: (token: string) => void;
   login: (tokens: {
     accessToken: string;
     refreshToken: string;
@@ -44,8 +44,8 @@ export const useAuthStore = create<State & Actions>()(
       ...initialState,
       setOtpScreen: (phone, token) =>
         set((state) => ({ ...state, isOtpScreen: true, phone, token })),
-      setPasswordScreen: () =>
-        set((state) => ({ ...state, isPasswordScreen: true })),
+      setPasswordScreen: (token) =>
+        set((state) => ({ ...state, isPasswordScreen: true, token })),
       login: ({ accessToken, refreshToken, randomToken }) =>
         set((state) => ({
           ...state,
