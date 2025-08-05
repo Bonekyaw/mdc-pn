@@ -23,6 +23,11 @@ type Actions = {
     randomToken: string;
   }) => void;
   logout: () => void;
+  setAccessToken: (tokens: {
+    accessToken: string;
+    refreshToken: string;
+    randomToken: string;
+  }) => void;
   setHasHydrated: (value: boolean) => void;
 };
 
@@ -52,6 +57,13 @@ export const useAuthStore = create<State & Actions>()(
           isLoggedIn: true,
           isPasswordScreen: false,
           isOtpScreen: false,
+          accessToken,
+          refreshToken,
+          randomToken,
+        })),
+      setAccessToken: ({ accessToken, refreshToken, randomToken }) =>
+        set((state) => ({
+          ...state,
           accessToken,
           refreshToken,
           randomToken,

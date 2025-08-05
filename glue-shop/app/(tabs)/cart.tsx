@@ -39,12 +39,15 @@ export default function CartScreen() {
   const [deleteProduct, setDeleteProduct] = useState<{
     productId: number;
     itemId: number;
-  }>();
+  } | null>(null);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const handleClose = () => setShowAlertDialog(false);
   const handleDelete = () => {
-    removeFromCart(deleteProduct!.productId, deleteProduct!.itemId);
+    if (deleteProduct) {
+      removeFromCart(deleteProduct!.productId, deleteProduct!.itemId);
+    }
     setShowAlertDialog(false);
+    // setDeleteProduct(null);
   };
 
   const deleteAllCarts = () => {
