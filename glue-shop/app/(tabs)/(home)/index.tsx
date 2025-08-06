@@ -1,20 +1,30 @@
 import { useState } from "react";
-import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
+import {
+  Button,
+  ButtonText,
+  ButtonIcon,
+  ButtonGroup,
+} from "@/components/ui/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { Dimensions, ScrollView } from "react-native";
 import { FlashList } from "@shopify/flash-list";
+import { useQuery } from "@tanstack/react-query";
 
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import Cart from "@/components/shop/Cart";
 import Title from "@/components/shop/Title";
 import { VStack } from "@/components/ui/vstack";
-import { categories, products } from "@/data";
+import { products } from "@/data";
 import Category from "@/components/shop/Category";
 import Product from "@/components/shop/Product";
 import { MoveUpRight } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
+import { Text } from "@/components/ui/text";
+import { fetchCategories } from "@/api/fetch";
+import { CategoryType } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -24,9 +34,38 @@ export default function HomeScreen() {
   const width = Dimensions.get("screen").width;
   const numColumns = width < 600 ? 2 : width < 768 ? 3 : 4;
 
+  const {
+    isPending: isCategoryPending,
+    error: categoryError,
+    data: categories,
+    refetch: refetchCategories,
+  } = useQuery<CategoryType[]>({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    // retry: 7,
+  });
+
   const handleSelect = (id: number) => {
     setSelect(id);
   };
+
+  if (categoryError) {
+    return (
+      <Box className="flex-1 items-center justify-center">
+        <Text className="mb-4">Error: {categoryError.message}</Text>
+        <Button
+          size="md"
+          variant="solid"
+          action="primary"
+          onPress={() => {
+            refetchCategories();
+          }}
+        >
+          <ButtonText>Retry</ButtonText>
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -54,17 +93,30 @@ export default function HomeScreen() {
         />
         <VStack className="mt-4 px-5">
           <Title title="Shop By Category" actionText="See All" />
-          <FlashList
-            data={categories}
-            extraData={select}
-            renderItem={({ item }) => (
-              <Category {...item} select={select} onSelect={handleSelect} />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            horizontal
-            estimatedItemSize={90}
-            showsHorizontalScrollIndicator={false}
-          />
+          {isCategoryPending ? (
+            <HStack space="4xl" className="my-4 align-middle">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  variant="circular"
+                  speed={4}
+                  className="h-[56px] w-[56px]"
+                />
+              ))}
+            </HStack>
+          ) : (
+            <FlashList
+              data={categories}
+              extraData={select}
+              renderItem={({ item }) => (
+                <Category {...item} select={select} onSelect={handleSelect} />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal
+              estimatedItemSize={90}
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
           <Title title="Recommended for You" actionText="See All" />
           <FlashList
             data={products}
