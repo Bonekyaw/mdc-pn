@@ -77,6 +77,7 @@ export const index = [
     const nextCursor =
       products.length > 0 ? products[products.length - 1].id : null;
 
+    // You must send such response for Tanstack-query Infinite scrolling
     res.status(200).json({
       message: "Get All infinite products",
       hasNextPage,
