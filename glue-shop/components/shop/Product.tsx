@@ -11,6 +11,7 @@ import { Text } from "@/components/ui/text";
 
 // interface ProductProps extends ProductType {
 // }
+const IMG_URL = process.env.EXPO_PUBLIC_IMG_URL;
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -36,10 +37,10 @@ const Product = ({
       <Card className="p-0">
         <Image
           style={{ width: "100%", aspectRatio: 3 / 4, borderRadius: 5 }}
-          source={image}
+          source={IMG_URL + image}
           placeholder={{ blurhash }}
           contentFit="cover"
-          transition={1000}
+          transition={500}
         />
         <Pressable className="absolute right-2 top-2 rounded-full bg-zinc-300/40">
           <Icon

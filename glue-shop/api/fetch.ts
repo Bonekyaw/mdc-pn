@@ -5,6 +5,28 @@ export const fetchCategories = async () => {
 
   const response = await api.get("users/categories");
   // Simulate a delay for demonstration purposes
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // Do not Use in Production
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+  return response.data;
+};
+
+export const fetchProducts = async ({
+  pageParam,
+  categoryId,
+}: {
+  pageParam: number | undefined;
+  categoryId: number;
+}) => {
+  console.log("Fetching products...", pageParam, "Category : ", categoryId);
+
+  let url = `users/products?limit=3&category=${categoryId}`;
+  if (pageParam) {
+    url += `&cursor=${pageParam}`;
+  }
+
+  const response = await api.get(url);
+  // Simulate a delay for demonstration purposes
+  // Do not Use in Production
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
   return response.data;
 };
