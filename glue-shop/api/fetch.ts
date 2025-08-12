@@ -19,7 +19,7 @@ export const fetchProducts = async ({
 }) => {
   console.log("Fetching products...", pageParam, "Category : ", categoryId);
 
-  let url = `users/products?limit=3&category=${categoryId}`;
+  let url = `users/products?limit=2&category=${categoryId}`;
   if (pageParam) {
     url += `&cursor=${pageParam}`;
   }
@@ -27,6 +27,6 @@ export const fetchProducts = async ({
   const response = await api.get(url);
   // Simulate a delay for demonstration purposes
   // Do not Use in Production
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   return response.data;
 };

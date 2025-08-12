@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
-import { Dimensions, ScrollView } from "react-native";
+import {
+  Dimensions,
+  ScrollView,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
@@ -20,12 +25,13 @@ import { fetchCategories, fetchProducts } from "@/api/fetch";
 import { CategoryType } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Grid, GridItem } from "@/components/ui/grid";
+import { useRefreshByUser } from "@/hooks/useRefreshByUser";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 export default function HomeScreen() {
-  const [select, setSelect] = useState(1);
+  const [select, setSelect] = useState(0);
   const width = Dimensions.get("screen").width;
   const numColumns = width < 600 ? 2 : width < 768 ? 3 : 4;
 
@@ -40,19 +46,19 @@ export default function HomeScreen() {
     // retry: 7,
   });
 
-  // useEffect(() => {
-  //   if (categories) {
-  //     setSelect(categories[0].id);
-  //   }
-  // }, [categories]);
+  useEffect(() => {
+    if (categories) {
+      setSelect(categories[0].id);
+    }
+  }, [categories]);
 
   const {
     data,
     isPending: isProductPending,
     error: productError,
-    // fetchNextPage,
-    // hasNextPage,
-    // isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     refetch: refetchProducts,
   } = useInfiniteQuery({
     queryKey: ["products", select], // products, 2
@@ -61,10 +67,13 @@ export default function HomeScreen() {
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     staleTime: 5 * 60 * 1000, // 5 mins, but default = 0
-    // enabled: !!select,
+    enabled: !!select,
   });
 
   const flatProducts = data?.pages.flatMap((page) => page.products) ?? [];
+
+  const { isRefrshingByUser, refetchByUser } =
+    useRefreshByUser(refetchProducts);
 
   const handleSelect = (id: number) => {
     setSelect(id);
@@ -91,6 +100,46 @@ export default function HomeScreen() {
     );
   }
 
+  const HeaderComponent = () => (
+    <>
+      <Image
+        style={{ width: "100%", aspectRatio: 20 / 9 }}
+        source={require("@/data/shop/banner6.png")}
+        placeholder={{ blurhash }}
+        contentFit="cover"
+        transition={1000}
+      />
+      <VStack className="mt-4 px-5">
+        <Title title="Shop By Category" actionText="See All" />
+        {isCategoryPending ? (
+          <HStack space="4xl" className="my-4 align-middle">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="circular"
+                speed={4}
+                className="h-[56px] w-[56px]"
+              />
+            ))}
+          </HStack>
+        ) : (
+          <FlashList
+            data={categories}
+            extraData={select}
+            renderItem={({ item }) => (
+              <Category {...item} select={select} onSelect={handleSelect} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            estimatedItemSize={90}
+            showsHorizontalScrollIndicator={false}
+          />
+        )}
+        <Title title="Recommended for You" actionText="See All" />
+      </VStack>
+    </>
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <HStack className="my-2 items-center justify-between px-5">
@@ -107,85 +156,69 @@ export default function HomeScreen() {
           <Cart />
         </Pressable>
       </HStack>
-      <ScrollView>
-        <Image
-          style={{ width: "100%", aspectRatio: 20 / 9 }}
-          source={require("@/data/shop/banner6.png")}
-          placeholder={{ blurhash }}
-          contentFit="cover"
-          transition={1000}
-        />
-        <VStack className="mt-4 px-5">
-          <Title title="Shop By Category" actionText="See All" />
-          {isCategoryPending ? (
-            <HStack space="4xl" className="my-4 align-middle">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton
-                  key={i}
-                  variant="circular"
-                  speed={4}
-                  className="h-[56px] w-[56px]"
-                />
-              ))}
-            </HStack>
-          ) : (
-            <FlashList
-              data={categories}
-              extraData={select}
-              renderItem={({ item }) => (
-                <Category {...item} select={select} onSelect={handleSelect} />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              horizontal
-              estimatedItemSize={90}
-              showsHorizontalScrollIndicator={false}
-            />
-          )}
-          <Title title="Recommended for You" actionText="See All" />
-          {isProductPending && flatProducts.length === 0 ? (
-            <Grid
-              className="gap-x-4 gap-y-2"
-              _extra={{ className: "grid-cols-12" }}
+      <HeaderComponent />
+      {isProductPending && flatProducts.length === 0 ? (
+        <Grid
+          className="gap-x-4 gap-y-2"
+          _extra={{ className: "grid-cols-12" }}
+        >
+          {Array.from({ length: 4 }).map((_, i) => (
+            <GridItem
+              key={i}
+              className="h-[300px] p-4"
+              _extra={{
+                className: "col-span-6 md:col-span-4 lg:col-span-3",
+              }}
             >
-              {Array.from({ length: 4 }).map((_, i) => (
-                <GridItem
-                  key={i}
-                  className="h-[300px] p-4"
-                  _extra={{
-                    className: "col-span-6 md:col-span-4 lg:col-span-3",
-                  }}
-                >
-                  <Skeleton
-                    variant="rounded"
-                    speed={4}
-                    className="rounded-lg"
-                  />
-                </GridItem>
-              ))}
-            </Grid>
-          ) : (
-            <FlashList
-              data={flatProducts}
-              numColumns={numColumns}
-              renderItem={({ item }) => <Product {...item} />}
-              keyExtractor={(item) => item.id.toString()}
-              estimatedItemSize={300}
-              showsVerticalScrollIndicator={false}
-              contentContainerClassName="mt-4"
-              ListFooterComponent={() => (
-                <Box className="h-40">
-                  <Button className="mx-auto rounded-lg bg-green-400">
+              <Skeleton variant="rounded" speed={4} className="rounded-lg" />
+            </GridItem>
+          ))}
+        </Grid>
+      ) : (
+        <FlashList
+          data={flatProducts}
+          numColumns={numColumns}
+          renderItem={({ item }) => <Product {...item} />}
+          keyExtractor={(item) => item.id.toString()}
+          estimatedItemSize={300}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="mt-4"
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefrshingByUser}
+              onRefresh={refetchByUser}
+            />
+          }
+          ListFooterComponent={() => (
+            <Box className="h-52">
+              {isFetchingNextPage ? (
+                <ActivityIndicator />
+              ) : (
+                flatProducts.length > 0 &&
+                !hasNextPage && (
+                  <Text className="text-center">No more products</Text>
+                )
+              )}
+              {flatProducts.length === 0 && (
+                <Box className="mt-4 size-full items-center justify-center rounded-lg bg-slate-100">
+                  <Text>Empty Product</Text>
+                </Box>
+              )}
+              {/* <Button className="mx-auto rounded-lg bg-green-400">
                     <ButtonText className="font-bold" size="lg">
                       Explore More
                     </ButtonText>
                     <ButtonIcon as={MoveUpRight} className="ml-1" />
-                  </Button>
-                </Box>
-              )}
-            />
+                  </Button> */}
+            </Box>
           )}
-        </VStack>
-      </ScrollView>
+        />
+      )}
     </SafeAreaView>
   );
 }

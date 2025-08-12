@@ -31,7 +31,7 @@ const Product = ({
 
   return (
     <Pressable
-      className="mx-2 mb-4"
+      className="mb-4 px-6"
       onPress={() => router.navigate({ pathname: "/detail", params: { id } })}
     >
       <Card className="p-0">
