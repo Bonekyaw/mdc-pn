@@ -27,6 +27,6 @@ export const fetchProducts = async ({
   const response = await api.get(url);
   // Simulate a delay for demonstration purposes
   // Do not Use in Production
-  // await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
   return response.data;
 };
