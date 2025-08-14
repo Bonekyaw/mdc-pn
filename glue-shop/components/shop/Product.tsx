@@ -9,8 +9,10 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 
-// interface ProductProps extends ProductType {
-// }
+interface ProductProps extends ProductType {
+  toggleFavourite: (productId: number, favourite: boolean) => void;
+}
+
 const IMG_URL = process.env.EXPO_PUBLIC_IMG_URL;
 
 const blurhash =
@@ -26,7 +28,8 @@ const Product = ({
   discount,
   image,
   users,
-}: ProductType) => {
+  toggleFavourite,
+}: ProductProps) => {
   const router = useRouter();
 
   return (
@@ -42,7 +45,10 @@ const Product = ({
           contentFit="cover"
           transition={500}
         />
-        <Pressable className="absolute right-2 top-2 rounded-full bg-zinc-300/40">
+        <Pressable
+          className="absolute right-2 top-2 rounded-full bg-zinc-300/40"
+          onPress={() => toggleFavourite(id, users.length === 0)}
+        >
           <Icon
             as={FavouriteIcon}
             className={`m-3 h-5 w-5 ${users.length > 0 && "fill-red-400"} text-red-400`}

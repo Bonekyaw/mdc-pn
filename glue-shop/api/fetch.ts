@@ -27,6 +27,27 @@ export const fetchProducts = async ({
   const response = await api.get(url);
   // Simulate a delay for demonstration purposes
   // Do not Use in Production
-  // await new Promise((resolve) => setTimeout(resolve, 3000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
+  return response.data;
+};
+
+export const toggleFavourite = async ({
+  productId,
+  favourite,
+}: {
+  productId: number;
+  favourite: boolean;
+}) => {
+  console.log("Favourite api --------", productId);
+
+  const response = await api.patch("users/products/favourite-toggle", {
+    productId,
+    favourite,
+  });
+
+  // Simulate a delay for demonstration purposes
+  // Do not Use in Production
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
+
   return response.data;
 };

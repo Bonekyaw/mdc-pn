@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { Dimensions, RefreshControl, ActivityIndicator } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery, useMutation } from "@tanstack/react-query";
 
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -15,7 +15,7 @@ import Category from "@/components/shop/Category";
 import Product from "@/components/shop/Product";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
-import { fetchCategories, fetchProducts } from "@/api/fetch";
+import { fetchCategories, fetchProducts, toggleFavourite } from "@/api/fetch";
 import { CategoryType } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Grid, GridItem } from "@/components/ui/grid";
@@ -63,6 +63,7 @@ export default function HomeScreen() {
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     staleTime: 5 * 60 * 1000, // 5 mins, but default = 0
+    gcTime: 10 * 60 * 1000, // 10 mins, but default = 5 , cacheTime
     // enabled: !!select,
   });
 
@@ -72,6 +73,13 @@ export default function HomeScreen() {
     useRefreshByUser(refetchProducts);
 
   // useRefreshOnFocus(refetchCategories);
+
+  const { mutate } = useMutation({
+    mutationFn: toggleFavourite,
+  });
+
+  const handleToggleFavourite = (productId: number, favourite: boolean) =>
+    mutate({ productId, favourite });
 
   const handleSelect = (id: number) => {
     setSelect(id);
@@ -198,7 +206,9 @@ export default function HomeScreen() {
           data={flatProducts}
           numColumns={numColumns}
           ListHeaderComponent={HeaderComponent}
-          renderItem={({ item }) => <Product {...item} />}
+          renderItem={({ item }) => (
+            <Product {...item} toggleFavourite={handleToggleFavourite} />
+          )}
           keyExtractor={(item) => item.id.toString()}
           estimatedItemSize={300}
           showsVerticalScrollIndicator={false}
