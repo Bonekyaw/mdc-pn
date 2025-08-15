@@ -4,7 +4,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { Dimensions, RefreshControl, ActivityIndicator } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import { useQuery, useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -30,6 +35,7 @@ export default function HomeScreen() {
   const width = Dimensions.get("screen").width;
   const numColumns = width < 600 ? 2 : width < 768 ? 3 : 4;
   const scrollRef = useRef<FlashList<any>>(null);
+  const queryClient = useQueryClient();
 
   const {
     isPending: isCategoryPending,
@@ -76,6 +82,51 @@ export default function HomeScreen() {
 
   const { mutate } = useMutation({
     mutationFn: toggleFavourite,
+    onMutate: async ({ productId, favourite }) => {
+      const queryKey = ["products", select];
+      // Cancel any outgoing refetch
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey });
+      // Snapshot the previous value
+      const previousProducts = queryClient.getQueryData(queryKey);
+      // Optimistically update to the new value
+      queryClient.setQueryData(queryKey, (oldData: any) => {
+        // If thers's no old Data, do nothing.
+        if (!oldData) {
+          return oldData;
+        }
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            products: page.products.map((product: any) => {
+              if (product.id === productId) {
+                return {
+                  ...product,
+                  users: favourite ? [{ id: 1 }] : [],
+                };
+              }
+              return product;
+            }),
+          })),
+        };
+      });
+      return { previousProducts };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, variables, context) => {
+      const queryKey = ["products", select];
+      if (context?.previousProducts) {
+        queryClient.setQueryData(queryKey, context.previousProducts);
+      }
+      // Toast Message
+    },
+    // onSuccess: () =>
+    //   queryClient.invalidateQueries({ queryKey: ["products", select] }),
+    // Always refetch after error or success:
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["products", select] }),
   });
 
   const handleToggleFavourite = (productId: number, favourite: boolean) =>
