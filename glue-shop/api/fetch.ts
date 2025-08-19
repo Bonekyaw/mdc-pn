@@ -1,3 +1,4 @@
+import { ProductType } from "@/types";
 import api from "./";
 
 export const fetchCategories = async () => {
@@ -49,5 +50,12 @@ export const toggleFavourite = async ({
   // Do not Use in Production
   // await new Promise((resolve) => setTimeout(resolve, 2000));
 
+  return response.data;
+};
+
+export const fetchProduct = async (productId: number): Promise<ProductType> => {
+  console.log("Fetching product details for ID:", productId);
+
+  const response = await api.get(`users/products/${productId}`);
   return response.data;
 };

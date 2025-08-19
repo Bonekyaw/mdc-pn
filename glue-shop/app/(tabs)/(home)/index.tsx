@@ -125,8 +125,8 @@ export default function HomeScreen() {
     // onSuccess: () =>
     //   queryClient.invalidateQueries({ queryKey: ["products", select] }),
     // Always refetch after error or success:
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["products", select] }),
+    // onSettled: () =>
+    //   queryClient.invalidateQueries({ queryKey: ["products", select] }),
   });
 
   const handleToggleFavourite = (productId: number, favourite: boolean) =>

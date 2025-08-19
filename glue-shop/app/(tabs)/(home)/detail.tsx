@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 
 import { VStack } from "@/components/ui/vstack";
 import ViewPager from "@/components/shop/ViewPager";
 import { Pressable } from "@/components/ui/pressable";
 import Cart from "@/components/shop/Cart";
 import { Text } from "@/components/ui/text";
-import { products } from "@/data";
+// import { products } from "@/data";
 import { ScrollView } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import {
@@ -43,15 +44,28 @@ import { Box } from "@/components/ui/box";
 import { Fab, FabLabel, FabIcon } from "@/components/ui/fab";
 import useCartStore from "@/store/cartStore";
 import type { CartItem } from "@/types";
+import { fetchProduct } from "@/api/fetch";
 
 const Detail = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+
+  const {
+    data: product,
+    isPending,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProduct(+id),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
   const [more, setMore] = useState(false);
   const [colors, setColors] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const product = products.find((p) => p.id === +id);
+  // const product = products.find((p) => p.id === +id);
   const { addToCart } = useCartStore();
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -102,6 +116,25 @@ const Detail = () => {
       },
     });
   };
+
+  if (isPending) {
+    return (
+      <Box className="flex-1 items-center justify-center">
+        <Text>Loading...</Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box className="flex-1 items-center justify-center">
+        <Text className="mb-4">Error: {error?.message}</Text>
+        <Button size="md" variant="solid" action="primary" onPress={refetch}>
+          <ButtonText>Retry</ButtonText>
+        </Button>
+      </Box>
+    );
+  }
 
   const addCartToStore = () => {
     if (cart.length === 0) {
@@ -185,14 +218,14 @@ const Detail = () => {
             <HStack space="xl">
               {product?.colors.map((item) => (
                 <Checkbox
-                  value={item.name}
-                  key={item.id}
-                  isDisabled={!item.stock}
+                  value={item.color.name}
+                  key={item.color.id}
+                  // isDisabled={!item.stock}
                 >
                   <CheckboxIndicator>
                     <CheckboxIcon as={CheckIcon} />
                   </CheckboxIndicator>
-                  <CheckboxLabel>{item.name}</CheckboxLabel>
+                  <CheckboxLabel>{item.color.name}</CheckboxLabel>
                 </Checkbox>
               ))}
             </HStack>
@@ -207,14 +240,14 @@ const Detail = () => {
             <HStack space="xl">
               {product?.sizes.map((item) => (
                 <Checkbox
-                  value={item.name}
-                  key={item.id}
-                  isDisabled={!item.stock}
+                  value={item.size.name}
+                  key={item.size.id}
+                  // isDisabled={!item.stock}
                 >
                   <CheckboxIndicator>
                     <CheckboxIcon as={CheckIcon} />
                   </CheckboxIndicator>
-                  <CheckboxLabel>{item.name}</CheckboxLabel>
+                  <CheckboxLabel>{item.size.name}</CheckboxLabel>
                 </Checkbox>
               ))}
             </HStack>
