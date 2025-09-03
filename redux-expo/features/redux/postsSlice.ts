@@ -40,9 +40,9 @@ export const fetchPosts = createAppAsyncThunk(
   }
 );
 
-// 1. posts/fetchPosts/start
-// 2. type: posts/fetchPosts/success , payload: response.data
-// Or type: posts/fetchPosts/failure , payload: response.error.message
+// 1. posts/fetchPosts/pending
+// 2. type: posts/fetchPosts/fulfilled , payload: response.data
+// Or type: posts/fetchPosts/rejected , payload: response.error.message
 
 export const addPost = createAppAsyncThunk(
   "posts/addPost",
