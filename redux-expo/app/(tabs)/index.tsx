@@ -13,7 +13,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
-import { fetchPosts, addPost, type Post } from "@/features/redux/postsSlice";
+import {
+  fetchPosts,
+  addPost,
+  updatePost,
+  type Post,
+  deletePost,
+} from "@/features/redux/postsSlice";
 
 export default function HomeScreen() {
   const dispatch = useAppDispatch();
@@ -44,18 +50,39 @@ export default function HomeScreen() {
   const handleSubmit = async () => {
     setPending(true);
     try {
-      await dispatch(addPost({ title, content })).unwrap();
+      if (editing) {
+        await dispatch(updatePost({ ...editing, title, content })).unwrap();
+      } else {
+        await dispatch(addPost({ title, content })).unwrap();
+      }
       setTitle("");
       setContent("");
     } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to add post");
+      Alert.alert(
+        "Error",
+        error.message || editing
+          ? "Failed to update post"
+          : "Failed to add post"
+      );
     } finally {
       setPending(false);
+      setEditing(null);
     }
   };
 
-  const handleEdit = (post: Post) => {};
-  const handleDelete = (id: string) => {};
+  const handleEdit = (post: Post) => {
+    setEditing(post);
+    setTitle(post.title);
+    setContent(post.content);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await dispatch(deletePost(id)).unwrap();
+    } catch (error: any) {
+      Alert.alert("Error", error.message || "Failed to delete post");
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, padding: 16 }}>

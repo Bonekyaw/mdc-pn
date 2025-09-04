@@ -2,33 +2,13 @@
   "posts": [
     {
       "id": "abc",
-      "title": "First Post",
-      "content": "This is the content of the first post."
+      "title": "First Post !!!",
+      "content": "This is the content of the first post.!!!"
     },
     {
       "id": "def",
       "title": "Second Post",
       "content": "This is the content of the second post."
-    },
-    {
-      "id": "c965",
-      "title": "3rd Post",
-      "content": "3rd content"
-    },
-    {
-      "id": "2ad2",
-      "title": "4th Post",
-      "content": "4th content"
-    },
-    {
-      "id": "5db7",
-      "title": "5th Post",
-      "content": "5th content"
-    },
-    {
-      "id": "ee4e",
-      "title": "6th Post",
-      "content": "6th content"
     }
   ]
 }

@@ -53,6 +53,24 @@ export const addPost = createAppAsyncThunk(
   }
 );
 
+// PUT http://192.168.100.109:4000/posts/id
+export const updatePost = createAppAsyncThunk(
+  "posts/updatePost",
+  async (post: Post) => {
+    const response = await axios.put(`${POST_API_URL}/${post.id}`, post);
+    return response.data;
+  }
+);
+
+// Delete http://192.168.100.109:4000/posts/id
+export const deletePost = createAppAsyncThunk(
+  "posts/deletePost",
+  async (id: string) => {
+    const response = await axios.delete(`${POST_API_URL}/${id}`);
+    return id;
+  }
+);
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -80,6 +98,23 @@ const postsSlice = createSlice({
           (action.payload as string) ||
           action.error.message ||
           "Failed to add post";
+      })
+      // Updating an existing post
+      .addCase(updatePost.fulfilled, (state, action: PayloadAction<Post>) => {
+        // const { id, title, content } = action.payload;
+        // const existingPost = state.items.find((post) => post.id === id);
+        // if (existingPost) {
+        //   existingPost.title = title;
+        //   existingPost.content = content;
+        // }
+        const index = state.items.findIndex(
+          (post) => post.id === action.payload.id
+        );
+        if (index !== -1) state.items[index] = action.payload;
+      })
+      // Deleting a post
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.items = state.items.filter((post) => post.id !== action.payload);
       });
   },
 });
