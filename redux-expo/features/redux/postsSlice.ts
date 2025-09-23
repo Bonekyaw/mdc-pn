@@ -1,14 +1,19 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAppAsyncThunk } from "./withTypes";
 import { RootState } from "./store";
 
-const POST_API_URL = "http://192.168.100.109:4000/posts";
+const POST_API_URL = "http://192.168.100.114:4000/posts";
 
 export interface Post {
   id: string;
   title: string;
   content: string;
+  userId: string;
 }
 
 interface PostsState {
@@ -56,8 +61,8 @@ export const addPost = createAppAsyncThunk(
 // PUT http://192.168.100.109:4000/posts/id
 export const updatePost = createAppAsyncThunk(
   "posts/updatePost",
-  async (post: Post) => {
-    const response = await axios.put(`${POST_API_URL}/${post.id}`, post);
+  async (post: Partial<Post>) => {
+    const response = await axios.patch(`${POST_API_URL}/${post.id}`, post);
     return response.data;
   }
 );
@@ -66,7 +71,7 @@ export const updatePost = createAppAsyncThunk(
 export const deletePost = createAppAsyncThunk(
   "posts/deletePost",
   async (id: string) => {
-    const response = await axios.delete(`${POST_API_URL}/${id}`);
+    await axios.delete(`${POST_API_URL}/${id}`);
     return id;
   }
 );
@@ -101,16 +106,16 @@ const postsSlice = createSlice({
       })
       // Updating an existing post
       .addCase(updatePost.fulfilled, (state, action: PayloadAction<Post>) => {
-        // const { id, title, content } = action.payload;
-        // const existingPost = state.items.find((post) => post.id === id);
-        // if (existingPost) {
-        //   existingPost.title = title;
-        //   existingPost.content = content;
-        // }
-        const index = state.items.findIndex(
-          (post) => post.id === action.payload.id
-        );
-        if (index !== -1) state.items[index] = action.payload;
+        const { id, title } = action.payload;
+        const existingPost = state.items.find((post) => post.id === id);
+        if (existingPost) {
+          existingPost.title = title;
+          // existingPost.content = content;
+        }
+        // const index = state.items.findIndex(
+        //   (post) => post.id === action.payload.id
+        // );
+        // if (index !== -1) state.items[index] = action.payload;
       })
       // Deleting a post
       .addCase(deletePost.fulfilled, (state, action) => {
@@ -121,3 +126,17 @@ const postsSlice = createSlice({
 
 export default postsSlice.reducer;
 export const selectPostsStatus = (state: RootState) => state.posts.status;
+export const selectAllPosts = (state: RootState) => state.posts.items;
+
+// Wrong function
+// export const selectPostsByUser = (state: RootState, userId: string) => {
+//   const allPosts = selectAllPosts(state);
+//   return allPosts.filter((post) => post.userId === userId);
+// };
+
+// Memoized Selector
+// selectPostsByUser(state, "2")
+export const selectPostsByUser = createSelector(
+  [selectAllPosts, (state: RootState, userId: string) => userId],
+  (posts, userId) => posts.filter((post) => post.userId === userId)
+);

@@ -1,5 +1,4 @@
-import { Button, StyleSheet, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, StyleSheet, Text, View } from "react-native";
 
 import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
 import {
@@ -9,23 +8,27 @@ import {
   countUsers,
 } from "@/features/redux/counterSlice";
 
-export default function HomeScreen() {
+export default function CounterPage() {
   const count = useAppSelector((state) => state.counter.value);
   const adultUsersLength = useAppSelector(countUsers);
   const dispatch = useAppDispatch();
 
   return (
-    <SafeAreaView>
-      <Text>Counter : {count}</Text>
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+      }}
+    >
       <Button title="Increment +" onPress={() => dispatch(increment())} />
+      <Text>Counter : {count}</Text>
       <Button title="Decrement -" onPress={() => dispatch(decrement())} />
-      <Button
+      {/* <Button
         title="incrementByAmount 2"
         onPress={() => dispatch(incrementByAmount(2))}
       />
-      <Text>Users : {adultUsersLength}</Text>
-    </SafeAreaView>
+      <Text>Users : {adultUsersLength}</Text> */}
+    </View>
   );
 }
-
-const styles = StyleSheet.create({});
