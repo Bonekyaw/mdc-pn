@@ -1,13 +1,16 @@
+// Not finished yet
 import {
   createSelector,
   createSlice,
+  createEntityAdapter,
+  type EntityState,
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAppAsyncThunk } from "./withTypes";
 import { RootState } from "./store";
 
-const POST_API_URL = "http://192.168.100.114:4000/posts";
+const POST_API_URL = "http://192.168.100.115:4000/posts";
 
 export interface Post {
   id: string;
@@ -16,23 +19,29 @@ export interface Post {
   userId: string;
 }
 
-interface PostsState {
-  items: Post[];
+interface PostsState extends EntityState<Post, string> {
+  // items: Post[];
   status: "idle" | "pending" | "succeeded" | "failed";
   error: string | null;
 }
 
-const initialState: PostsState = {
-  items: [],
+// const postsAdapter = createEntityAdapter<Post>({
+//   // Sorting in descending order by date
+//   sortComparer: (a, b) => b.date.localeCompare(a.date),
+// });
+const postsAdapter = createEntityAdapter<Post>();
+
+const initialState: PostsState = postsAdapter.getInitialState({
+  // items: [],
   status: "idle",
   error: null,
-};
+});
 
 export const fetchPosts = createAppAsyncThunk(
   "posts/fetchPosts",
   async () => {
     const response = await axios.get(POST_API_URL);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
     return response.data; // As Payload
   },
   {
@@ -87,7 +96,8 @@ const postsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<Post[]>) => {
-        state.items.push(...action.payload);
+        // state.items.push(...action.payload);
+        postsAdapter.setAll(state, action.payload);
         state.status = "succeeded";
       })
       .addCase(fetchPosts.rejected, (state, action) => {
@@ -140,3 +150,27 @@ export const selectPostsByUser = createSelector(
   [selectAllPosts, (state: RootState, userId: string) => userId],
   (posts, userId) => posts.filter((post) => post.userId === userId)
 );
+
+// Before Normalization
+// [
+//   { id: "user1", title, content },
+//   { id: "user2", title, content },
+//   { id: "user3", title, content },
+// ];
+
+// After Normalization
+// {
+//   posts: {
+//     ids: ["user1", "user2", "user3"],
+//     entities: {
+//       "user1": {id: "user1", title, content},
+//       "user2": {id: "user2", title, content},
+//       "user3": {id: "user3", title, content},
+//     }
+//   }
+// }
+
+// Use "setAll" when you’re loading a fresh list from API.
+// Use "setMany" to bulk replace/add specific items.
+// Use "updateMany" when only modifying existing items.
+// Use "upsertMany" when you don’t know if entities exist (safe insert-or-update)
