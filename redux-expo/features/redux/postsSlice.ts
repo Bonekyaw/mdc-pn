@@ -97,7 +97,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<Post[]>) => {
         // state.items.push(...action.payload);
-        postsAdapter.setAll(state, action.payload);
+        postsAdapter.upsertMany(state, action.payload);
         state.status = "succeeded";
       })
       .addCase(fetchPosts.rejected, (state, action) => {
@@ -106,7 +106,8 @@ const postsSlice = createSlice({
       })
       // Adding new Post case
       .addCase(addPost.fulfilled, (state, action: PayloadAction<Post>) => {
-        state.items.push(action.payload);
+        // state.items.push(action.payload);
+        postsAdapter.addOne(state, action.payload);
       })
       .addCase(addPost.rejected, (state, action) => {
         state.error =
@@ -117,11 +118,13 @@ const postsSlice = createSlice({
       // Updating an existing post
       .addCase(updatePost.fulfilled, (state, action: PayloadAction<Post>) => {
         const { id, title } = action.payload;
-        const existingPost = state.items.find((post) => post.id === id);
-        if (existingPost) {
-          existingPost.title = title;
-          // existingPost.content = content;
-        }
+        postsAdapter.updateOne(state, { id, changes: { title } });
+        // const existingPost = state.items.find((post) => post.id === id);
+        // if (existingPost) {
+        //   existingPost.title = title;
+        //   // existingPost.content = content;
+        // }
+
         // const index = state.items.findIndex(
         //   (post) => post.id === action.payload.id
         // );
@@ -129,14 +132,21 @@ const postsSlice = createSlice({
       })
       // Deleting a post
       .addCase(deletePost.fulfilled, (state, action) => {
-        state.items = state.items.filter((post) => post.id !== action.payload);
+        // state.items = state.items.filter((post) => post.id !== action.payload);
+        postsAdapter.removeOne(state, action.payload);
       });
   },
 });
 
 export default postsSlice.reducer;
 export const selectPostsStatus = (state: RootState) => state.posts.status;
-export const selectAllPosts = (state: RootState) => state.posts.items;
+// export const selectAllPosts = (state: RootState) => state.posts.items;
+
+export const {
+  selectAll: selectAllPosts,
+  selectById: selectPostById,
+  selectIds: SelectPostIds,
+} = postsAdapter.getSelectors((state: RootState) => state.posts);
 
 // Wrong function
 // export const selectPostsByUser = (state: RootState, userId: string) => {
@@ -170,7 +180,22 @@ export const selectPostsByUser = createSelector(
 //   }
 // }
 
-// Use "setAll" when you’re loading a fresh list from API.
-// Use "setMany" to bulk replace/add specific items.
-// Use "updateMany" when only modifying existing items.
-// Use "upsertMany" when you don’t know if entities exist (safe insert-or-update)
+// Before
+// {
+//   ids: ["user1", "user2"],
+//   entities: {
+//     "user1": { id: "user1", name: "Alice" },
+//     "user2": { id: "user2", name: "Bob" }
+//   }
+// }
+
+// adapter.updateOne(state, { id: "user2", age: 30 });
+
+// After
+// {
+//   ids: ["user1", "user2"],
+//   entities: {
+//     "user1": { id: "user1", name: "Alice" },
+//     "user2": { id: "user2", name: "Bob", age: 30 }
+//   }
+// }
