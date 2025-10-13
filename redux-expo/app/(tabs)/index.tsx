@@ -4,7 +4,7 @@ import CounterPage from "@/pages/CounterPage";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, padding: 16 }}>
+    <SafeAreaView style={{ flex: 1, padding: 16, backgroundColor: "white" }}>
       <CounterPage />
       <PostsList />
     </SafeAreaView>

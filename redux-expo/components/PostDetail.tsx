@@ -1,22 +1,30 @@
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 
-import { deletePost, updatePost, type Post } from "@/features/redux/postsSlice";
-import { useAppDispatch } from "@/hooks/useRedux";
+import {
+  deletePost,
+  updatePost,
+  // type Post,
+  selectPostById,
+} from "@/features/redux/postsSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 
 interface PostDetailProps {
-  post: Post;
+  // post: Post;
+  postId: string;
 }
 
-const PostDetail = ({ post }: PostDetailProps) => {
+const PostDetail = ({ postId }: PostDetailProps) => {
+  // "p1"
   const dispatch = useAppDispatch();
+  const post = useAppSelector((state) => selectPostById(state, postId));
 
   const [isEdit, setIsEdit] = useState(false);
   const [title, setTitle] = useState("");
 
   const handleEdit = async () => {
     try {
-      await dispatch(updatePost({ id: post.id, title })).unwrap();
+      await dispatch(updatePost({ id: postId, title })).unwrap();
 
       setTitle("");
       setIsEdit(false);
@@ -27,7 +35,7 @@ const PostDetail = ({ post }: PostDetailProps) => {
 
   const handleDelete = async () => {
     try {
-      await dispatch(deletePost(post.id)).unwrap();
+      await dispatch(deletePost(postId)).unwrap();
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to delete post");
     }

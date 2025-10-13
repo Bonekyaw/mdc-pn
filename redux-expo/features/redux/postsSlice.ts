@@ -10,7 +10,7 @@ import axios from "axios";
 import { createAppAsyncThunk } from "./withTypes";
 import { RootState } from "./store";
 
-const POST_API_URL = "http://192.168.100.115:4000/posts";
+const POST_API_URL = "http://192.168.100.119:4000/posts";
 
 export interface Post {
   id: string;
@@ -145,7 +145,7 @@ export const selectPostsStatus = (state: RootState) => state.posts.status;
 export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,
-  selectIds: SelectPostIds,
+  selectIds: selectPostIds,
 } = postsAdapter.getSelectors((state: RootState) => state.posts);
 
 // Wrong function

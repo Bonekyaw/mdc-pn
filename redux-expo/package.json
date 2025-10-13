@@ -1,5 +1,5 @@
 {
-  "name": "redux-expo",
+  "name": "redux",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -17,7 +17,7 @@
     "@react-navigation/native": "^7.1.6",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.11.0",
-    "expo": "~53.0.22",
+    "expo": "53.0.22",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
     "expo-font": "~13.3.2",
@@ -32,7 +32,7 @@
     "expo-web-browser": "~14.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-native": "0.79.6",
+    "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
