@@ -140,6 +140,7 @@ const postsSlice = createSlice({
 
 export default postsSlice.reducer;
 export const selectPostsStatus = (state: RootState) => state.posts.status;
+export const selectPostsError = (state: RootState) => state.posts.error;
 // export const selectAllPosts = (state: RootState) => state.posts.items;
 
 export const {

@@ -6,30 +6,30 @@ import {
   FlatList,
   Text,
   TextInput,
-  View,
 } from "react-native";
 
 import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
 import {
   fetchPosts,
   addPost,
-  updatePost,
-  type Post,
-  deletePost,
-  selectAllPosts,
-  selectPostsByUser,
+  // selectAllPosts,
+  // selectPostsByUser,
   selectPostIds,
+  selectPostsStatus,
+  selectPostsError,
 } from "@/features/redux/postsSlice";
 import PostDetail from "./PostDetail";
 
 export default function PostsList() {
   const dispatch = useAppDispatch();
-  const { status, error } = useAppSelector((state) => state.posts);
+  // const { status, error } = useAppSelector((state) => state.posts);
   // const userPosts = useAppSelector((state) => selectPostsByUser(state, "2"));
   // const posts = useAppSelector(selectAllPosts);
   //   const userPosts = posts.filter((post) => post.userId === "2");
 
   const postIds = useAppSelector(selectPostIds); // ["p1", "p2", "p3"]
+  const error = useAppSelector(selectPostsError);
+  const status = useAppSelector(selectPostsStatus);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
