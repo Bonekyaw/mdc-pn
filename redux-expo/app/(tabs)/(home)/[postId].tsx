@@ -11,21 +11,23 @@ import React, { useState } from "react";
 import {
   deletePost,
   updatePost,
-  type Post,
-  // selectPostById,
+  // type Post,
+  selectPostById,
 } from "@/features/redux/postsSlice";
-import { useAppDispatch } from "@/hooks/useRedux";
-import { Link } from "expo-router";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { useLocalSearchParams } from "expo-router";
 
 // interface PostDetailProps {
 //   // post: Post;
 //   postId: string;
 // }
 
-// const PostDetail = ({ postId }: PostDetailProps) => {
-const PostDetail = ({ post }: { post: Post }) => {
+const PostDetail = () => {
+  const { postId } = useLocalSearchParams();
   const dispatch = useAppDispatch();
-  // const post = useAppSelector((state) => selectPostById(state, postId));
+  const post = useAppSelector((state) =>
+    selectPostById(state, postId.toString())
+  );
 
   const [isEdit, setIsEdit] = useState(false);
   const [title, setTitle] = useState("");
@@ -52,12 +54,7 @@ const PostDetail = ({ post }: { post: Post }) => {
   return (
     <View style={styles.postContainer}>
       {!isEdit ? (
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.postTitle}>{post.title}</Text>
-          <Link href={`/${post.id}`} style={{ color: "#1e90ff", fontSize: 12 }}>
-            See more
-          </Link>
-        </View>
+        <Text style={styles.postTitle}>{post.title}</Text>
       ) : (
         <TextInput
           value={title}

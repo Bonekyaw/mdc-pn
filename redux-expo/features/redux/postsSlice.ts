@@ -10,7 +10,7 @@ import axios from "axios";
 import { createAppAsyncThunk } from "./withTypes";
 import { RootState } from "./store";
 
-const POST_API_URL = "http://192.168.100.119:4000/posts";
+const POST_API_URL = "http://192.168.100.122:4000/posts";
 
 export interface Post {
   id: string;
