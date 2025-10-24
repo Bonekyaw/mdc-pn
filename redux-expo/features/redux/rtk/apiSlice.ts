@@ -12,11 +12,25 @@ const API_URL = "http://192.168.100.122:4000";
 export const apiSlice = createApi({
   reducerPath: "api", // optional, defaults to 'api'
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  tagTypes: ["Post"],
   endpoints: (builder) => ({
     getPosts: builder.query<Post[], void>({
       query: () => "/posts",
+      providesTags: ["Post"],
+    }),
+    getPost: builder.query<Post, string>({
+      query: (postId) => `/posts/${postId}`,
+    }),
+    addNewPost: builder.mutation<Post, Omit<Post, "id">>({
+      query: (newPost) => ({
+        url: "/posts",
+        method: "POST",
+        body: newPost,
+      }),
+      invalidatesTags: ["Post"],
     }),
   }),
 });
 
-export const { useGetPostsQuery } = apiSlice;
+export const { useGetPostsQuery, useGetPostQuery, useAddNewPostMutation } =
+  apiSlice;

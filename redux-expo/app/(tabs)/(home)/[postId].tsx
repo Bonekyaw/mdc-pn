@@ -12,10 +12,11 @@ import {
   deletePost,
   updatePost,
   // type Post,
-  selectPostById,
+  // selectPostById,
 } from "@/features/redux/postsSlice";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { useAppDispatch } from "@/hooks/useRedux";
 import { useLocalSearchParams } from "expo-router";
+import { useGetPostQuery } from "@/features/redux/rtk/apiSlice";
 
 // interface PostDetailProps {
 //   // post: Post;
@@ -24,17 +25,24 @@ import { useLocalSearchParams } from "expo-router";
 
 const PostDetail = () => {
   const { postId } = useLocalSearchParams();
+
   const dispatch = useAppDispatch();
-  const post = useAppSelector((state) =>
-    selectPostById(state, postId.toString())
-  );
+  // const post = useAppSelector((state) =>
+  //   selectPostById(state, postId.toString())
+  // );
+
+  const {
+    data: post,
+    isLoading,
+    isSuccess,
+  } = useGetPostQuery(postId.toString());
 
   const [isEdit, setIsEdit] = useState(false);
   const [title, setTitle] = useState("");
 
   const handleEdit = async () => {
     try {
-      await dispatch(updatePost({ id: post.id, title })).unwrap();
+      await dispatch(updatePost({ id: post?.id, title })).unwrap();
 
       setTitle("");
       setIsEdit(false);
@@ -45,63 +53,71 @@ const PostDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await dispatch(deletePost(post.id)).unwrap();
+      await dispatch(deletePost(postId.toString())).unwrap();
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to delete post");
     }
   };
 
-  return (
-    <View style={styles.postContainer}>
-      {!isEdit ? (
-        <Text style={styles.postTitle}>{post.title}</Text>
-      ) : (
-        <TextInput
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Edit Title"
-          placeholderTextColor="#999"
-          style={styles.editInput}
-          autoFocus
-        />
-      )}
-      <Text>{post.content}</Text>
-      {!isEdit ? (
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.editButton]}
-            onPress={() => {
-              setIsEdit(true);
-              setTitle(post.title);
-            }}
-          >
-            <Text style={styles.editButtonText}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleDelete}
-            style={[styles.button, styles.deleteButton]}
-          >
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={{ flexDirection: "row", marginTop: 8, gap: 16 }}>
-          <TouchableOpacity
-            style={[styles.button, styles.saveButton]}
-            onPress={handleEdit}
-          >
-            <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.cancelButton]}
-            onPress={() => setIsEdit(false)}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
-  );
+  let content: React.ReactNode;
+
+  if (isLoading) {
+    content = <Text>Loading post...</Text>;
+  } else if (isSuccess && post) {
+    content = (
+      <>
+        {!isEdit ? (
+          <Text style={styles.postTitle}>{post.title}</Text>
+        ) : (
+          <TextInput
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Edit Title"
+            placeholderTextColor="#999"
+            style={styles.editInput}
+            autoFocus
+          />
+        )}
+        <Text>{post.content}</Text>
+        {!isEdit ? (
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              style={[styles.button, styles.editButton]}
+              onPress={() => {
+                setIsEdit(true);
+                setTitle(post.title);
+              }}
+            >
+              <Text style={styles.editButtonText}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDelete}
+              style={[styles.button, styles.deleteButton]}
+            >
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={{ flexDirection: "row", marginTop: 8, gap: 16 }}>
+            <TouchableOpacity
+              style={[styles.button, styles.saveButton]}
+              onPress={handleEdit}
+            >
+              <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={() => setIsEdit(false)}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </>
+    );
+  }
+
+  return <View style={styles.postContainer}>{content}</View>;
 };
 
 // Styles

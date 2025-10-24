@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -10,21 +10,23 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
-import {
-  fetchPosts,
-  addPost,
-  // selectAllPosts,
-  // selectPostsByUser,
-  selectPostIds,
-  selectPostsStatus,
-  selectPostsError,
-} from "@/features/redux/postsSlice";
+// import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
+import // fetchPosts,
+// addPost,
+// selectAllPosts,
+// selectPostsByUser,
+// selectPostIds,
+// selectPostsStatus,
+// selectPostsError,
+"@/features/redux/postsSlice";
 import PostDetail from "./PostDetail";
-import { useGetPostsQuery } from "@/features/redux/rtk/apiSlice";
+import {
+  useGetPostsQuery,
+  useAddNewPostMutation,
+} from "@/features/redux/rtk/apiSlice";
 
 export default function PostsList() {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   // const { status, error } = useAppSelector((state) => state.posts);
   // const userPosts = useAppSelector((state) => selectPostsByUser(state, "2"));
   // const posts = useAppSelector(selectAllPosts);
@@ -37,16 +39,19 @@ export default function PostsList() {
   const {
     data: posts = [],
     isLoading,
-    isFetching,
+    // isFetching,
     isSuccess,
     isError,
     error,
     refetch,
   } = useGetPostsQuery();
 
+  const [addNewPost, { isLoading: isAddingNewPostLoading }] =
+    useAddNewPostMutation();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [pending, setPending] = useState(false);
+  // const [pending, setPending] = useState(false);
 
   // useEffect(() => {
   //   if (status === "idle") {
@@ -66,15 +71,16 @@ export default function PostsList() {
   // }
 
   const handleSubmit = async () => {
-    setPending(true);
+    //setPending(true);
     try {
-      await dispatch(addPost({ title, content, userId: "2" })).unwrap();
+      // await dispatch(addPost({ title, content, userId: "2" })).unwrap();
+      await addNewPost({ title, content, userId: "2" }).unwrap();
       setTitle("");
       setContent("");
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to add post");
     } finally {
-      setPending(false);
+      // setPending(false);
     }
   };
 
@@ -107,13 +113,17 @@ export default function PostsList() {
       />
       <TouchableOpacity
         onPress={handleSubmit}
-        disabled={pending}
+        disabled={isAddingNewPostLoading}
         style={styles.button}
       >
         <Text style={styles.saveButtonText}>
-          {pending ? "Adding Post..." : "Add Post"}
+          {isAddingNewPostLoading ? "Adding Post..." : "Add Post"}
         </Text>
       </TouchableOpacity>
+
+      {/* <TouchableOpacity onPress={refetch} style={styles.button}>
+        <Text style={styles.saveButtonText}>Refetch Posts</Text>
+      </TouchableOpacity> */}
 
       {isLoading && (
         <>
