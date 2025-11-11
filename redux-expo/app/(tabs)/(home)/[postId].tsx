@@ -16,7 +16,7 @@ import {
 } from "@/features/redux/postsSlice";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { useLocalSearchParams } from "expo-router";
-import { useGetPostQuery } from "@/features/redux/rtk/apiSlice";
+import { useGetPostQuery } from "@/features/redux/rtk/postsSlice";
 
 // interface PostDetailProps {
 //   // post: Post;

@@ -7,15 +7,16 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
+import { Link } from "expo-router";
 
 import {
   deletePost,
-  updatePost,
+  // updatePost,
   type Post,
   // selectPostById,
 } from "@/features/redux/postsSlice";
 import { useAppDispatch } from "@/hooks/useRedux";
-import { Link } from "expo-router";
+import { useEditPostMutation } from "@/features/redux/rtk/postsSlice";
 
 // interface PostDetailProps {
 //   // post: Post;
@@ -27,12 +28,16 @@ const PostDetail = ({ post }: { post: Post }) => {
   const dispatch = useAppDispatch();
   // const post = useAppSelector((state) => selectPostById(state, postId));
 
+  const [updatePost, { isLoading }] = useEditPostMutation();
+
   const [isEdit, setIsEdit] = useState(false);
   const [title, setTitle] = useState("");
 
   const handleEdit = async () => {
+    if (!title.trim()) return;
     try {
-      await dispatch(updatePost({ id: post.id, title })).unwrap();
+      // await dispatch(updatePost({ id: post.id, title })).unwrap();
+      await updatePost({ id: post.id, title }).unwrap();
 
       setTitle("");
       setIsEdit(false);

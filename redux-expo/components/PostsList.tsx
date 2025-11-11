@@ -23,7 +23,7 @@ import PostDetail from "./PostDetail";
 import {
   useGetPostsQuery,
   useAddNewPostMutation,
-} from "@/features/redux/rtk/apiSlice";
+} from "@/features/redux/rtk/postsSlice";
 
 export default function PostsList() {
   // const dispatch = useAppDispatch();
