@@ -36,11 +36,11 @@ const PostDetail = ({ post }: { post: Post }) => {
   const handleEdit = async () => {
     if (!title.trim()) return;
     try {
+      setIsEdit(false);
       // await dispatch(updatePost({ id: post.id, title })).unwrap();
       await updatePost({ id: post.id, title }).unwrap();
 
       setTitle("");
-      setIsEdit(false);
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to update post");
     }
@@ -97,8 +97,11 @@ const PostDetail = ({ post }: { post: Post }) => {
           <TouchableOpacity
             style={[styles.button, styles.saveButton]}
             onPress={handleEdit}
+            disabled={isLoading}
           >
-            <Text style={styles.saveButtonText}>Save</Text>
+            <Text style={styles.saveButtonText}>
+              {isLoading ? "Submitting..." : "Save"}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.cancelButton]}
