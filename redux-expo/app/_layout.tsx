@@ -11,6 +11,9 @@ import { Provider } from "react-redux";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/features/redux/store";
+import { apiSliceWithPosts } from "@/features/redux/rtk/postsSlice"; // to initialize
+
+store.dispatch(apiSliceWithPosts.endpoints.getPosts.initiate());
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

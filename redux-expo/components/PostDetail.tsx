@@ -6,27 +6,36 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { Link } from "expo-router";
 
 import {
   deletePost,
   // updatePost,
-  type Post,
+  // type Post,
   // selectPostById,
 } from "@/features/redux/postsSlice";
 import { useAppDispatch } from "@/hooks/useRedux";
-import { useEditPostMutation } from "@/features/redux/rtk/postsSlice";
+import {
+  useEditPostMutation,
+  useGetPostsQuery,
+} from "@/features/redux/rtk/postsSlice";
 
-// interface PostDetailProps {
-//   // post: Post;
-//   postId: string;
-// }
+interface PostDetailProps {
+  // post: Post;
+  postId: string;
+}
 
-// const PostDetail = ({ postId }: PostDetailProps) => {
-const PostDetail = ({ post }: { post: Post }) => {
+const PostItem = ({ postId }: PostDetailProps) => {
+  // const PostItem = ({ post }: { post: Post }) => {
   const dispatch = useAppDispatch();
   // const post = useAppSelector((state) => selectPostById(state, postId));
+
+  const { post } = useGetPostsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      post: data?.find((post) => post.id === postId),
+    }),
+  });
 
   const [updatePost, { isLoading }] = useEditPostMutation();
 
@@ -38,7 +47,7 @@ const PostDetail = ({ post }: { post: Post }) => {
     try {
       setIsEdit(false);
       // await dispatch(updatePost({ id: post.id, title })).unwrap();
-      await updatePost({ id: post.id, title }).unwrap();
+      await updatePost({ id: postId, title }).unwrap();
 
       setTitle("");
     } catch (error: any) {
@@ -48,11 +57,15 @@ const PostDetail = ({ post }: { post: Post }) => {
 
   const handleDelete = async () => {
     try {
-      await dispatch(deletePost(post.id)).unwrap();
+      await dispatch(deletePost(postId)).unwrap();
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to delete post");
     }
   };
+
+  if (!post) {
+    return null;
+  }
 
   return (
     <View style={styles.postContainer}>
@@ -211,4 +224,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostDetail;
+export default memo(PostItem);

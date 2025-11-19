@@ -1,16 +1,15 @@
-import { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Text,
-  TextInput,
   StyleSheet,
   View,
-  TouchableOpacity,
 } from "react-native";
 
-// import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
+import {
+  useAppSelector,
+  // useAppDispatch
+} from "@/hooks/useRedux";
 import // fetchPosts,
 // addPost,
 // selectAllPosts,
@@ -19,38 +18,40 @@ import // fetchPosts,
 // selectPostsStatus,
 // selectPostsError,
 "@/features/redux/postsSlice";
-import PostDetail from "./PostDetail";
+import PostItem from "./PostDetail";
+// import {
+//   useGetPostsQuery,
+//   // useAddNewPostMutation,
+// } from "@/features/redux/rtk/postsSlice";
+import PostsInput from "./PostInput";
 import {
-  useGetPostsQuery,
-  useAddNewPostMutation,
+  // selectAllPosts,
+  // selectPostsByUser,
+  selectPostsIdsByUser,
 } from "@/features/redux/rtk/postsSlice";
 
 export default function PostsList() {
   // const dispatch = useAppDispatch();
   // const { status, error } = useAppSelector((state) => state.posts);
-  // const userPosts = useAppSelector((state) => selectPostsByUser(state, "2"));
+  // const posts = useAppSelector((state) => selectPostsByUser(state, "2"));
+  const postsIds = useAppSelector((state) => selectPostsIdsByUser(state, "2"));
   // const posts = useAppSelector(selectAllPosts);
-  //   const userPosts = posts.filter((post) => post.userId === "2");
+  // const userPosts = posts.filter((post) => post.userId === "2");
 
   // const postIds = useAppSelector(selectPostIds); // ["p1", "p2", "p3"]
   // const error = useAppSelector(selectPostsError);
   // const status = useAppSelector(selectPostsStatus);
 
-  const {
-    data: posts = [],
-    isLoading,
-    // isFetching,
-    isSuccess,
-    isError,
-    error,
-    refetch,
-  } = useGetPostsQuery();
+  // const {
+  //   data: posts = [],
+  //   isLoading,
+  //   // isFetching,
+  //   isSuccess,
+  //   isError,
+  //   error,
+  //   // refetch,
+  // } = useGetPostsQuery();
 
-  const [addNewPost, { isLoading: isAddingNewPostLoading }] =
-    useAddNewPostMutation();
-
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   // const [pending, setPending] = useState(false);
 
   // useEffect(() => {
@@ -70,74 +71,26 @@ export default function PostsList() {
   //   );
   // }
 
-  const handleSubmit = async () => {
-    //setPending(true);
-    try {
-      // await dispatch(addPost({ title, content, userId: "2" })).unwrap();
-      await addNewPost({ title, content, userId: "2" }).unwrap();
-      setTitle("");
-      setContent("");
-    } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to add post");
-    } finally {
-      // setPending(false);
-    }
-  };
-
   return (
     <>
       <Text style={styles.title}>RTK query</Text>
-      {isError && (
+      {/* {isError && (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error.toString()}</Text>
         </View>
-      )}
-      <TextInput
-        placeholder="Enter title"
-        placeholderTextColor="#999"
-        value={title}
-        onChangeText={setTitle}
-        style={[styles.textInput, error && styles.inputError]}
-      />
-      <TextInput
-        placeholder="Enter Content"
-        placeholderTextColor="#999"
-        value={content}
-        onChangeText={setContent}
-        multiline
-        style={[
-          styles.textInput,
-          styles.contentInput,
-          error && styles.inputError,
-        ]}
-      />
-      <TouchableOpacity
-        onPress={handleSubmit}
-        disabled={isAddingNewPostLoading}
-        style={styles.button}
-      >
-        <Text style={styles.saveButtonText}>
-          {isAddingNewPostLoading ? "Adding Post..." : "Add Post"}
-        </Text>
-      </TouchableOpacity>
-
-      {/* <TouchableOpacity onPress={refetch} style={styles.button}>
-        <Text style={styles.saveButtonText}>Refetch Posts</Text>
-      </TouchableOpacity> */}
-
-      {isLoading && (
+      )} */}
+      <PostsInput />
+      {/* {isLoading && (
         <>
           <ActivityIndicator size="large" color="green" />
           <Text>Loading posts ...</Text>
         </>
-      )}
-      {isSuccess && (
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <PostDetail post={item} />}
-        />
-      )}
+      )} */}
+      <FlatList
+        data={postsIds}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => <PostItem postId={item} />}
+      />
     </>
   );
 }
